@@ -1,0 +1,68 @@
+<div class="page-header">
+  <div>
+    <span class="eyebrow">My Workspace</span>
+    <h1 class="h3 mb-0">Welcome back, <%= currentUser.name.split(' ')[0] %></h1>
+    <p class="text-muted mb-0">Here's what's on your plate today.</p>
+  </div>
+  <a href="/team/tasks" class="btn btn-ember"><i class="bi bi-list-check me-1"></i> View My Tasks</a>
+</div>
+
+<div class="row g-3 mb-4">
+  <%- include('../partials/stat-card', { icon: 'bi-diagram-3', value: stats.assignedProjects, label: 'Assigned Projects' }) %>
+  <%- include('../partials/stat-card', { icon: 'bi-list-task', value: stats.assignedTasks, label: 'Assigned Tasks' }) %>
+  <%- include('../partials/stat-card', { icon: 'bi-hourglass-split', value: stats.pendingTasks, label: 'Pending Tasks' }) %>
+  <%- include('../partials/stat-card', { icon: 'bi-check2-circle', value: stats.completedTasks, label: 'Completed Tasks' }) %>
+</div>
+
+<div class="row g-4">
+  <div class="col-lg-7">
+    <div class="panel p-4 h-100">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="h6 mb-0">My Projects</h2>
+        <a href="/team/projects" class="small text-decoration-none">View all <i class="bi bi-arrow-right"></i></a>
+      </div>
+      <% if (!myProjects.length) { %>
+        <div class="empty-state">
+          <i class="bi bi-diagram-3"></i>
+          <p class="mb-0">You haven't been added to any project yet.</p>
+        </div>
+      <% } else { %>
+        <div class="d-flex flex-column gap-2">
+          <% myProjects.forEach(p => { %>
+            <a href="/projects/<%= p._id %>" class="list-row d-flex justify-content-between align-items-center text-decoration-none text-reset">
+              <div>
+                <div class="fw-semibold"><%= p.name %></div>
+                <div class="text-muted small">Due <%= dayjs(p.endDate).format('MMM D, YYYY') %></div>
+              </div>
+              <span class="stamp <%= projectStatusClass(p.status) %>"><%= p.status %></span>
+            </a>
+          <% }) %>
+        </div>
+      <% } %>
+    </div>
+  </div>
+
+  <div class="col-lg-5">
+    <div class="panel p-4 h-100">
+      <h2 class="h6 mb-3">Upcoming Deadlines</h2>
+      <% if (!upcomingDeadlines.length) { %>
+        <div class="empty-state py-4">
+          <i class="bi bi-calendar-check"></i>
+          <p class="mb-0">Nothing due in the next 3 days. Nice work!</p>
+        </div>
+      <% } else { %>
+        <div class="d-flex flex-column gap-2">
+          <% upcomingDeadlines.forEach(t => { %>
+            <a href="/tasks/<%= t._id %>" class="list-row d-flex justify-content-between align-items-center text-decoration-none text-reset py-2 px-3">
+              <div>
+                <div class="fw-semibold small"><%= t.title %></div>
+                <div class="text-muted" style="font-size:.75rem;"><%= t.project.name %></div>
+              </div>
+              <span class="stamp <%= priorityClass(t.priority) %>"><%= t.priority %></span>
+            </a>
+          <% }) %>
+        </div>
+      <% } %>
+    </div>
+  </div>
+</div>

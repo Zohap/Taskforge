@@ -1,0 +1,48 @@
+<div class="page-header">
+  <div>
+    <span class="eyebrow">General</span>
+    <h1 class="h3 mb-0">Notifications</h1>
+    <p class="text-muted mb-0">Stay up to date on tasks, discussions, and deadlines.</p>
+  </div>
+  <form action="/notifications/read-all?_method=PATCH" method="POST">
+    <button class="btn btn-outline-secondary btn-sm"><i class="bi bi-check2-all me-1"></i> Mark all read</button>
+  </form>
+</div>
+
+<ul class="nav nav-pills mb-3 gap-2">
+  <li class="nav-item"><a class="nav-link <%= filter === 'all' ? 'active' : 'btn btn-outline-secondary btn-sm' %>" href="/notifications?filter=all">All</a></li>
+  <li class="nav-item"><a class="nav-link <%= filter === 'unread' ? 'active' : 'btn btn-outline-secondary btn-sm' %>" href="/notifications?filter=unread">Unread</a></li>
+  <li class="nav-item"><a class="nav-link <%= filter === 'read' ? 'active' : 'btn btn-outline-secondary btn-sm' %>" href="/notifications?filter=read">Read</a></li>
+</ul>
+
+<% if (!notifications.length) { %>
+  <div class="panel empty-state">
+    <i class="bi bi-bell-slash"></i>
+    <p class="mb-0">No notifications here.</p>
+  </div>
+<% } else { %>
+  <div class="d-flex flex-column gap-2">
+    <% const icons = { task_assigned: 'bi-list-task', status_updated: 'bi-arrow-repeat', discussion_added: 'bi-chat-dots', deadline_approaching: 'bi-alarm', project_assigned: 'bi-diagram-3', added_to_project: 'bi-person-plus', removed_from_project: 'bi-person-dash' }; %>
+    <% notifications.forEach(n => { %>
+      <div class="list-row d-flex align-items-start gap-3 <%= !n.isRead ? 'border-start border-3' : '' %>" style="<%= !n.isRead ? 'border-color: var(--ember) !important;' : '' %>">
+        <i class="bi <%= icons[n.type] || 'bi-bell' %> fs-5 mt-1" style="color: var(--steel);"></i>
+        <div class="flex-grow-1">
+          <p class="mb-1 small <%= !n.isRead ? 'fw-semibold' : 'text-muted' %>"><%= n.message %></p>
+          <span class="text-muted" style="font-size:.72rem;"><%= dayjs(n.createdAt).format('MMM D, YYYY h:mm A') %></span>
+        </div>
+        <div class="d-flex gap-1">
+          <% if (!n.isRead) { %>
+            <form action="/notifications/<%= n._id %>/read?_method=PATCH" method="POST">
+              <button class="btn btn-sm btn-outline-secondary" title="Mark read / open"><i class="bi bi-check2"></i></button>
+            </form>
+          <% } else if (n.link) { %>
+            <a href="<%= n.link %>" class="btn btn-sm btn-outline-secondary"><i class="bi bi-arrow-right"></i></a>
+          <% } %>
+          <form action="/notifications/<%= n._id %>?_method=DELETE" method="POST">
+            <button class="btn btn-sm btn-outline-danger" title="Delete"><i class="bi bi-trash"></i></button>
+          </form>
+        </div>
+      </div>
+    <% }) %>
+  </div>
+<% } %>

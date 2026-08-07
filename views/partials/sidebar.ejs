@@ -1,0 +1,50 @@
+<%
+  const isActive = (prefix) => currentPath === prefix || currentPath.startsWith(prefix + '/') ? 'active' : '';
+  const role = currentUser.role;
+%>
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-inner">
+    <nav class="nav flex-column gap-1">
+      <a class="nav-link <%= isActive('/dashboard') %>" href="/dashboard">
+        <i class="bi bi-speedometer2"></i> Dashboard
+      </a>
+
+      <% if (role === 'admin') { %>
+        <div class="nav-section-label">Administration</div>
+        <a class="nav-link <%= isActive('/admin/users') %>" href="/admin/users">
+          <i class="bi bi-people"></i> Manage Users
+        </a>
+        <a class="nav-link <%= isActive('/admin/projects') %>" href="/admin/projects">
+          <i class="bi bi-folder2-open"></i> Manage Projects
+        </a>
+      <% } %>
+
+      <% if (role === 'project_manager' || role === 'admin') { %>
+        <div class="nav-section-label">Project Manager</div>
+        <a class="nav-link <%= isActive('/projects') && !currentPath.startsWith('/admin') ? 'active' : '' %>" href="/pm/projects">
+          <i class="bi bi-diagram-3"></i> My Projects
+        </a>
+      <% } %>
+
+      <% if (role === 'team_member') { %>
+        <div class="nav-section-label">My Work</div>
+        <a class="nav-link <%= isActive('/projects') ? 'active' : '' %>" href="/team/projects">
+          <i class="bi bi-diagram-3"></i> My Projects
+        </a>
+        <a class="nav-link <%= isActive('/team/tasks') %>" href="/team/tasks">
+          <i class="bi bi-list-check"></i> My Tasks
+        </a>
+      <% } %>
+
+      <div class="nav-section-label">General</div>
+      <a class="nav-link <%= isActive('/notifications') %>" href="/notifications">
+        <i class="bi bi-bell"></i> Notifications
+        <% if (unreadCount > 0) { %><span class="badge rounded-pill bg-danger ms-auto"><%= unreadCount %></span><% } %>
+      </a>
+      <a class="nav-link <%= isActive('/profile') %>" href="/profile">
+        <i class="bi bi-person-circle"></i> My Profile
+      </a>
+    </nav>
+  </div>
+</aside>
+<div class="sidebar-backdrop" id="sidebarBackdrop"></div>

@@ -1,0 +1,120 @@
+<div class="page-header">
+  <div>
+    <span class="eyebrow"><a href="/projects/<%= project._id %>" class="text-decoration-none" style="color: var(--ember-dark);"><%= project.name %></a></span>
+    <h1 class="h3 mb-1"><%= task.title %></h1>
+    <div class="d-flex align-items-center gap-2 flex-wrap">
+      <span class="stamp <%= taskStatusClass(task.status) %>"><%= task.status %></span>
+      <span class="stamp <%= priorityClass(task.priority) %>"><%= task.priority %></span>
+      <span class="text-muted small"><i class="bi bi-calendar-event me-1"></i>Due <%= dayjs(task.dueDate).format('MMM D, YYYY') %></span>
+    </div>
+  </div>
+  <div class="d-flex gap-2">
+    <% if (canManage) { %>
+      <a href="/tasks/<%= task._id %>/edit" class="btn btn-outline-secondary"><i class="bi bi-pencil me-1"></i> Edit</a>
+      <form action="/tasks/<%= task._id %>?_method=DELETE" method="POST" data-confirm="Delete this task?">
+        <button class="btn btn-outline-danger"><i class="bi bi-trash me-1"></i> Delete</button>
+      </form>
+    <% } %>
+  </div>
+</div>
+
+<div class="row g-4">
+  <div class="col-lg-8">
+    <div class="panel p-4 mb-4">
+      <h2 class="h6 mb-2">Description</h2>
+      <p class="text-muted mb-0"><%= task.description || 'No description provided.' %></p>
+    </div>
+
+    <div class="panel p-4 mb-4">
+      <h2 class="h6 mb-3">Attachments</h2>
+      <% if (task.attachments && task.attachments.length) { %>
+        <div class="d-flex flex-column gap-2 mb-3">
+          <% task.attachments.forEach(a => { %>
+            <a href="<%= a.path %>" target="_blank" class="list-row d-flex align-items-center gap-2 text-decoration-none text-reset py-2 px-3">
+              <i class="bi bi-paperclip"></i>
+              <span class="small flex-grow-1"><%= a.originalName %></span>
+              <i class="bi bi-box-arrow-up-right small text-muted"></i>
+            </a>
+          <% }) %>
+        </div>
+      <% } else { %>
+        <p class="text-muted small mb-3">No files attached yet.</p>
+      <% } %>
+
+      <% if (canUpdateStatus) { %>
+        <form action="/tasks/<%= task._id %>/attachments" method="POST" enctype="multipart/form-data" class="d-flex gap-2">
+          <input type="file" name="attachment" class="form-control form-control-sm" required />
+          <button class="btn btn-sm btn-outline-secondary" type="submit"><i class="bi bi-upload"></i> Upload</button>
+        </form>
+      <% } %>
+    </div>
+
+    <div class="panel p-4">
+      <h2 class="h6 mb-3">Task Discussion</h2>
+      <p class="text-muted small">Use this thread for updates and questions related to this task only.</p>
+
+      <% if (!discussions.length) { %>
+        <div class="empty-state py-4">
+          <i class="bi bi-chat-dots"></i>
+          <p class="mb-0">No comments yet. Start the discussion below.</p>
+        </div>
+      <% } else { %>
+        <div class="mb-3">
+          <% discussions.forEach(d => { %>
+            <div class="comment">
+              <span class="avatar-sm flex-shrink-0"><%= d.author.avatarInitials %></span>
+              <div class="flex-grow-1">
+                <div class="d-flex align-items-center gap-2 mb-1">
+                  <span class="fw-semibold small"><%= d.author.name %></span>
+                  <span class="text-muted" style="font-size:.72rem;"><%= ROLE_LABELS[d.author.role] %> · <%= dayjs(d.createdAt).format('MMM D, h:mm A') %></span>
+                </div>
+                <div class="comment-bubble"><%= d.message %></div>
+              </div>
+            </div>
+          <% }) %>
+        </div>
+      <% } %>
+
+      <form action="/tasks/<%= task._id %>/discussion" method="POST" class="d-flex gap-2 align-items-start mt-3">
+        <span class="avatar-sm flex-shrink-0"><%= currentUser.avatarInitials %></span>
+        <textarea name="message" class="form-control" rows="2" maxlength="1000" placeholder="Write a comment…" required></textarea>
+        <button class="btn btn-ember" type="submit"><i class="bi bi-send"></i></button>
+      </form>
+    </div>
+  </div>
+
+  <div class="col-lg-4">
+    <div class="panel p-4 mb-4">
+      <h2 class="h6 mb-3">Details</h2>
+      <div class="d-flex justify-content-between small mb-2">
+        <span class="text-muted">Assigned To</span>
+        <span class="fw-semibold"><%= task.assignedTo ? task.assignedTo.name : 'Unassigned' %></span>
+      </div>
+      <div class="d-flex justify-content-between small mb-2">
+        <span class="text-muted">Created By</span>
+        <span class="fw-semibold"><%= task.createdBy ? task.createdBy.name : '—' %></span>
+      </div>
+      <div class="d-flex justify-content-between small mb-2">
+        <span class="text-muted">Created</span>
+        <span class="fw-semibold"><%= dayjs(task.createdAt).format('MMM D, YYYY') %></span>
+      </div>
+    </div>
+
+    <% if (canUpdateStatus) { %>
+      <div class="panel p-4">
+        <h2 class="h6 mb-3">Update Status</h2>
+        <div class="d-flex flex-column gap-2">
+          <% TASK_STATUS.forEach(s => { %>
+            <form action="/tasks/<%= task._id %>/status?_method=PATCH" method="POST">
+              <input type="hidden" name="status" value="<%= s %>" />
+              <button type="submit" class="btn btn-sm w-100 text-start <%= task.status === s ? 'btn-ember' : 'btn-outline-secondary' %>">
+                <% if (task.status === s) { %><i class="bi bi-check-circle-fill me-1"></i><% } %>
+                <%= s %>
+              </button>
+            </form>
+          <% }) %>
+        </div>
+      </div>
+    <% } %>
+  </div>
+</div>

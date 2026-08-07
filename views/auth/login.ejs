@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('../partials/head') %>
+</head>
+<body>
+  <div class="auth-wrap">
+    <div class="auth-card">
+      <div class="text-center mb-4">
+        <span class="brand-mark d-inline-flex mb-3" style="width:44px;height:44px;font-size:1.3rem;"><i class="bi bi-kanban-fill"></i></span>
+        <h1 class="h4 mb-1">Welcome to TaskForge</h1>
+        <p class="text-muted small mb-0">Sign in to manage your projects and tasks.</p>
+      </div>
+
+      <%- include('../partials/flash') %>
+      <%- include('../partials/form-errors') %>
+
+      <form action="/login" method="POST" novalidate>
+        <div class="mb-3">
+          <label class="form-label" for="email">Email address</label>
+          <input type="email" class="form-control" id="email" name="email" value="<%= oldInput.email || '' %>" required autofocus placeholder="you@company.com" />
+        </div>
+        <div class="mb-3">
+          <label class="form-label" for="password">Password</label>
+          <input type="password" class="form-control" id="password" name="password" required placeholder="••••••••" />
+        </div>
+        <button type="submit" class="btn btn-ember w-100 py-2">Log In</button>
+      </form>
+
+      <p class="text-center text-muted small mt-4 mb-0">
+        Accounts are created by your Administrator. Contact them if you need access.
+      </p>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/js/main.js"></script>
+</body>
+</html>

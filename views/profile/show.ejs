@@ -1,0 +1,68 @@
+<div class="page-header">
+  <div>
+    <span class="eyebrow">General</span>
+    <h1 class="h3 mb-0">My Profile</h1>
+    <p class="text-muted mb-0">Manage your personal information and password.</p>
+  </div>
+</div>
+
+<div class="row g-4">
+  <div class="col-lg-7">
+    <div class="panel p-4">
+      <h2 class="h6 mb-3">Personal Information</h2>
+      <%- include('../partials/form-errors') %>
+      <form action="/profile?_method=PUT" method="POST" novalidate>
+        <div class="mb-3">
+          <label class="form-label">Full Name</label>
+          <input type="text" name="name" class="form-control" value="<%= profileUser.name %>" required maxlength="80" />
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Email Address</label>
+          <input type="email" name="email" class="form-control" value="<%= profileUser.email %>" required />
+        </div>
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Job Title</label>
+            <input type="text" name="jobTitle" class="form-control" value="<%= profileUser.jobTitle || '' %>" />
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Phone</label>
+            <input type="text" name="phone" class="form-control" value="<%= profileUser.phone || '' %>" />
+          </div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Bio</label>
+          <textarea name="bio" class="form-control" rows="3" maxlength="500"><%= profileUser.bio || '' %></textarea>
+        </div>
+        <button type="submit" class="btn btn-ember px-4">Save Changes</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="col-lg-5">
+    <div class="panel p-4 mb-4 text-center">
+      <span class="avatar-sm d-inline-flex mb-3" style="width:64px;height:64px;font-size:1.4rem;"><%= profileUser.avatarInitials %></span>
+      <h2 class="h6 mb-0"><%= profileUser.name %></h2>
+      <p class="text-muted small mb-0"><%= ROLE_LABELS[profileUser.role] %></p>
+    </div>
+
+    <div class="panel p-4">
+      <h2 class="h6 mb-3">Change Password</h2>
+      <form action="/profile/password?_method=PUT" method="POST">
+        <div class="mb-3">
+          <label class="form-label">Current Password</label>
+          <input type="password" name="currentPassword" class="form-control" required />
+        </div>
+        <div class="mb-3">
+          <label class="form-label">New Password</label>
+          <input type="password" name="newPassword" class="form-control" minlength="6" required />
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Confirm New Password</label>
+          <input type="password" name="confirmPassword" class="form-control" minlength="6" required />
+        </div>
+        <button type="submit" class="btn btn-outline-secondary px-4">Update Password</button>
+      </form>
+    </div>
+  </div>
+</div>

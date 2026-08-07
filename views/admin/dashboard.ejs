@@ -1,0 +1,99 @@
+<div class="page-header">
+  <div>
+    <span class="eyebrow">Admin Portal</span>
+    <h1 class="h3 mb-0">Welcome back, <%= currentUser.name.split(' ')[0] %></h1>
+    <p class="text-muted mb-0">Here's what's happening across the organization.</p>
+  </div>
+  <div class="d-flex gap-2">
+    <a href="/admin/users/new" class="btn btn-outline-secondary"><i class="bi bi-person-plus me-1"></i> New User</a>
+    <a href="/admin/projects/new" class="btn btn-ember"><i class="bi bi-plus-lg me-1"></i> New Project</a>
+  </div>
+</div>
+
+<div class="row g-3 mb-4">
+  <%- include('../partials/stat-card', { icon: 'bi-people', value: stats.totalUsers, label: 'Total Users' }) %>
+  <%- include('../partials/stat-card', { icon: 'bi-folder2-open', value: stats.totalProjects, label: 'Total Projects' }) %>
+  <%- include('../partials/stat-card', { icon: 'bi-lightning-charge', value: stats.activeProjects, label: 'Active Projects' }) %>
+  <%- include('../partials/stat-card', { icon: 'bi-exclamation-triangle', value: stats.overdueProjects, label: 'Overdue Projects' }) %>
+</div>
+
+<div class="row g-3 mb-4">
+  <%- include('../partials/stat-card', { icon: 'bi-list-check', value: stats.totalTasks, label: 'Total Tasks' }) %>
+  <%- include('../partials/stat-card', { icon: 'bi-check2-circle', value: stats.completedTasks, label: 'Completed Tasks' }) %>
+</div>
+
+
+
+<div class="panel p-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="h6 mb-0">Recent Projects</h2>
+    <a href="/admin/projects" class="small text-decoration-none">View all <i class="bi bi-arrow-right"></i></a>
+  </div>
+
+  <% if (!recentProjects.length) { %>
+    <div class="empty-state">
+      <i class="bi bi-folder2-open"></i>
+      <p class="mb-3">No projects yet. Create your first project to get started.</p>
+      <a href="/admin/projects/new" class="btn btn-ember btn-sm">Create Project</a>
+    </div>
+  <% } else { %>
+    <div class="table-responsive">
+     <table class="table data-table mb-0">
+  <thead>
+    <tr>
+      <th>Project</th>
+      <th>Manager</th>
+      <th>Priority</th>
+      <th>Status</th>
+      <th>Deadline</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% recentProjects.forEach(p => { %>
+      <tr class="project-row" onclick="window.location='/projects/<%= p._id %>'">
+
+        <td>
+          <div class="d-flex align-items-center gap-3">
+
+            <div class="project-avatar">
+              <i class="bi bi-kanban"></i>
+            </div>
+
+            <div>
+              <div class="fw-semibold"><%= p.name %></div>
+
+              <small class="text-muted">
+                Created Project
+              </small>
+            </div>
+
+          </div>
+        </td>
+
+        <td><%= p.projectManager ? p.projectManager.name : '—' %></td>
+
+        <td>
+          <span class="stamp <%= priorityClass(p.priority) %>">
+            <%= p.priority %>
+          </span>
+        </td>
+
+        <td>
+          <span class="stamp <%= projectStatusClass(p.status) %>">
+            <%= p.status %>
+          </span>
+        </td>
+
+        <td class="text-muted">
+          <i class="bi bi-calendar3 me-1"></i>
+          <%= dayjs(p.endDate).format('MMM D, YYYY') %>
+        </td>
+
+      </tr>
+    <% }) %>
+  </tbody>
+</table>
+    </div>
+  <% } %>
+</div>

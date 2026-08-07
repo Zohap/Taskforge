@@ -1,0 +1,52 @@
+<div class="page-header">
+  <div>
+    <span class="eyebrow">Administration</span>
+    <h1 class="h3 mb-0"><%= title %></h1>
+  </div>
+  <a href="/admin/users" class="btn btn-outline-secondary"><i class="bi bi-arrow-left me-1"></i> Back to Users</a>
+</div>
+
+<div class="panel p-4" style="max-width: 560px;">
+  <%- include('../../partials/form-errors') %>
+
+  <form action="<%= formAction %>" method="POST" novalidate>
+    <div class="mb-3">
+      <label class="form-label">Full Name</label>
+      <input type="text" name="name" class="form-control" value="<%= user.name || '' %>" required maxlength="80" placeholder="e.g. Sarah Ahmed" />
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Email Address</label>
+      <input type="email" name="email" class="form-control" value="<%= user.email || '' %>" required placeholder="sarah@company.com" />
+    </div>
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <label class="form-label">Role</label>
+        <select name="role" class="form-select" required>
+          <option value="team_member" <%= user.role === 'team_member' ? 'selected' : '' %>>Team Member</option>
+          <option value="project_manager" <%= user.role === 'project_manager' ? 'selected' : '' %>>Project Manager</option>
+          <option value="admin" <%= user.role === 'admin' ? 'selected' : '' %>>Administrator</option>
+        </select>
+      </div>
+      <div class="col-md-6 mb-3">
+        <label class="form-label">Job Title</label>
+        <input type="text" name="jobTitle" class="form-control" value="<%= user.jobTitle || '' %>" placeholder="e.g. Backend Engineer" />
+      </div>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Phone <span class="text-muted fw-normal">(optional)</span></label>
+      <input type="text" name="phone" class="form-control" value="<%= user.phone || '' %>" placeholder="+92 300 1234567" />
+    </div>
+    <div class="mb-3">
+      <label class="form-label">
+        <%= method === 'POST' && formAction === '/admin/users' ? 'Password' : 'New Password' %>
+        <% if (!(method === 'POST' && formAction === '/admin/users')) { %><span class="text-muted fw-normal">(leave blank to keep current)</span><% } %>
+      </label>
+      <input type="password" name="password" class="form-control" minlength="6" placeholder="At least 6 characters" <%= (method === 'POST' && formAction === '/admin/users') ? 'required' : '' %> />
+    </div>
+
+    <div class="d-flex gap-2 mt-4">
+      <button type="submit" class="btn btn-ember px-4">Save User</button>
+      <a href="/admin/users" class="btn btn-outline-secondary">Cancel</a>
+    </div>
+  </form>
+</div>

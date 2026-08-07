@@ -1,0 +1,70 @@
+<div class="page-header">
+  <div>
+    <span class="eyebrow">My Workspace</span>
+    <h1 class="h3 mb-0">My Tasks</h1>
+    <p class="text-muted mb-0">Tasks assigned to you across all projects.</p>
+  </div>
+</div>
+
+<div class="panel p-3 mb-3">
+  <form method="GET" action="/team/tasks" class="row g-2 align-items-center">
+    <div class="col-md-4">
+      <input type="text" name="q" class="form-control" placeholder="Search tasks…" value="<%= query.q %>" />
+    </div>
+    <div class="col-6 col-md-2">
+      <select name="status" class="form-select" data-auto-submit>
+        <option value="">All Status</option>
+        <% TASK_STATUS.forEach(s => { %><option value="<%= s %>" <%= query.status === s ? 'selected' : '' %>><%= s %></option><% }) %>
+      </select>
+    </div>
+    <div class="col-6 col-md-2">
+      <select name="priority" class="form-select" data-auto-submit>
+        <option value="">All Priority</option>
+        <% TASK_PRIORITY.forEach(p => { %><option value="<%= p %>" <%= query.priority === p ? 'selected' : '' %>><%= p %></option><% }) %>
+      </select>
+    </div>
+    <div class="col-6 col-md-2">
+      <select name="sort" class="form-select" data-auto-submit>
+        <option value="deadline" <%= query.sort === 'deadline' ? 'selected' : '' %>>Deadline soonest</option>
+        <option value="newest" <%= query.sort === 'newest' ? 'selected' : '' %>>Newest first</option>
+        <option value="priority" <%= query.sort === 'priority' ? 'selected' : '' %>>Priority</option>
+      </select>
+    </div>
+    <div class="col-6 col-md-2 d-grid">
+      <button class="btn btn-outline-secondary" type="submit"><i class="bi bi-search me-1"></i>Search</button>
+    </div>
+  </form>
+</div>
+
+<% if (!tasks.length) { %>
+  <div class="panel empty-state">
+    <i class="bi bi-list-check"></i>
+    <p class="mb-0">No tasks match your filters.</p>
+  </div>
+<% } else { %>
+  <div class="panel p-0">
+    <div class="table-responsive">
+      <table class="table data-table mb-0">
+        <thead><tr><th>Task</th><th>Project</th><th>Priority</th><th>Due</th><th>Status</th><th class="text-end">Update</th></tr></thead>
+        <tbody>
+          <% tasks.forEach(t => { %>
+            <tr>
+              <td class="fw-semibold"><a href="/tasks/<%= t._id %>" class="text-decoration-none text-reset"><%= t.title %></a></td>
+              <td class="text-muted"><%= t.project.name %></td>
+              <td><span class="stamp <%= priorityClass(t.priority) %>"><%= t.priority %></span></td>
+              <td class="text-muted small"><%= dayjs(t.dueDate).format('MMM D, YYYY') %></td>
+              <td><span class="stamp <%= taskStatusClass(t.status) %>"><%= t.status %></span></td>
+              <td class="text-end">
+                <form action="/tasks/<%= t._id %>/status?_method=PATCH" method="POST" class="d-inline-flex gap-1">
+                  <select name="status" class="form-select form-select-sm" style="width:auto" data-auto-submit>
+                    <% TASK_STATUS.forEach(s => { %><option value="<%= s %>" <%= t.status === s ? 'selected' : '' %>><%= s %></option><% }) %>
+                  </select>
+                </form>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+<% } %>

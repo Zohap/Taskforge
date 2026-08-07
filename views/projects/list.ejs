@@ -1,0 +1,69 @@
+<div class="page-header">
+  <div>
+    <span class="eyebrow"><%= currentUser.role === 'project_manager' ? 'Project Manager Portal' : 'My Workspace' %></span>
+    <h1 class="h3 mb-0">My Projects</h1>
+    <p class="text-muted mb-0">Projects you're currently part of.</p>
+  </div>
+</div>
+
+<div class="panel p-3 mb-3">
+  <form method="GET" action="/projects" class="row g-2 align-items-center">
+    <div class="col-md-4">
+      <input type="text" name="q" class="form-control" placeholder="Search projects…" value="<%= query.q %>" />
+    </div>
+    <div class="col-6 col-md-2">
+      <select name="status" class="form-select" data-auto-submit>
+        <option value="">All Status</option>
+        <% PROJECT_STATUS.forEach(s => { %><option value="<%= s %>" <%= query.status === s ? 'selected' : '' %>><%= s %></option><% }) %>
+      </select>
+    </div>
+    <div class="col-6 col-md-2">
+      <select name="priority" class="form-select" data-auto-submit>
+        <option value="">All Priority</option>
+        <% PROJECT_PRIORITY.forEach(p => { %><option value="<%= p %>" <%= query.priority === p ? 'selected' : '' %>><%= p %></option><% }) %>
+      </select>
+    </div>
+    <div class="col-6 col-md-2">
+      <select name="sort" class="form-select" data-auto-submit>
+        <option value="newest" <%= query.sort === 'newest' ? 'selected' : '' %>>Newest first</option>
+        <option value="deadline" <%= query.sort === 'deadline' ? 'selected' : '' %>>Deadline soonest</option>
+        <option value="name_asc" <%= query.sort === 'name_asc' ? 'selected' : '' %>>Name A–Z</option>
+      </select>
+    </div>
+    <div class="col-6 col-md-2 d-grid">
+      <button class="btn btn-outline-secondary" type="submit"><i class="bi bi-search me-1"></i>Search</button>
+    </div>
+  </form>
+</div>
+
+<% if (!projects.length) { %>
+  <div class="panel empty-state">
+    <i class="bi bi-folder2-open"></i>
+    <p class="mb-0">No projects to show yet. Your Administrator will assign you to a project.</p>
+  </div>
+<% } else { %>
+  <div class="d-flex flex-column gap-2">
+    <% projects.forEach(p => { %>
+      <% const prog = progressMap[p._id]; const pct = prog && prog.total ? Math.round((prog.completed / prog.total) * 100) : 0; %>
+      <a href="/projects/<%= p._id %>" class="list-row d-block text-decoration-none text-reset">
+        <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+          <div class="flex-grow-1">
+            <h3 class="h6 mb-1"><%= p.name %></h3>
+            <p class="text-muted small mb-2"><%= p.description.slice(0, 120) %><%= p.description.length > 120 ? '…' : '' %></p>
+            <div class="d-flex align-items-center gap-3 flex-wrap">
+              <span class="stamp <%= projectStatusClass(p.status) %>"><%= p.status %></span>
+              <span class="stamp <%= priorityClass(p.priority) %>"><%= p.priority %></span>
+              <span class="text-muted small"><i class="bi bi-person-badge me-1"></i><%= p.projectManager ? p.projectManager.name : 'No PM assigned' %></span>
+              <span class="text-muted small"><i class="bi bi-people me-1"></i><%= p.teamMembers.length %> members</span>
+              <span class="text-muted small"><i class="bi bi-calendar-event me-1"></i><%= dayjs(p.endDate).format('MMM D, YYYY') %></span>
+            </div>
+          </div>
+        </div>
+        <div class="d-flex align-items-center gap-2 mt-2" style="max-width: 320px;">
+          <div class="gauge flex-grow-1"><div class="gauge-fill" style="width:<%= pct %>%"></div></div>
+          <span class="text-muted small" style="font-family: var(--font-mono);"><%= pct %>%</span>
+        </div>
+      </a>
+    <% }) %>
+  </div>
+<% } %>

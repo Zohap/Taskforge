@@ -1,0 +1,103 @@
+<div class="page-header">
+  <div>
+    <span class="eyebrow">Administration</span>
+    <h1 class="h3 mb-0">Manage Users</h1>
+    <p class="text-muted mb-0">Create accounts and control access across the platform.</p>
+  </div>
+  <a href="/admin/users/new" class="btn btn-ember"><i class="bi bi-person-plus me-1"></i> New User</a>
+</div>
+
+<div class="panel p-4 mb-4">
+  <form method="GET" action="/admin/users" class="row g-2 align-items-center">
+    <div class="col-md-4">
+      <input type="text" name="q" class="form-control" placeholder="Search by name or email…" value="<%= query.q %>" />
+    </div>
+    <div class="col-6 col-md-2">
+      <select name="role" class="form-select" data-auto-submit>
+        <option value="">All Roles</option>
+        <option value="admin" <%= query.role === 'admin' ? 'selected' : '' %>>Administrator</option>
+        <option value="project_manager" <%= query.role === 'project_manager' ? 'selected' : '' %>>Project Manager</option>
+        <option value="team_member" <%= query.role === 'team_member' ? 'selected' : '' %>>Team Member</option>
+      </select>
+    </div>
+    <div class="col-6 col-md-2">
+      <select name="status" class="form-select" data-auto-submit>
+        <option value="">All Status</option>
+        <option value="active" <%= query.status === 'active' ? 'selected' : '' %>>Active</option>
+        <option value="inactive" <%= query.status === 'inactive' ? 'selected' : '' %>>Inactive</option>
+      </select>
+    </div>
+    <div class="col-6 col-md-2">
+      <select name="sort" class="form-select" data-auto-submit>
+        <option value="newest" <%= query.sort === 'newest' ? 'selected' : '' %>>Newest first</option>
+        <option value="oldest" <%= query.sort === 'oldest' ? 'selected' : '' %>>Oldest first</option>
+        <option value="name_asc" <%= query.sort === 'name_asc' ? 'selected' : '' %>>Name A–Z</option>
+        <option value="name_desc" <%= query.sort === 'name_desc' ? 'selected' : '' %>>Name Z–A</option>
+      </select>
+    </div>
+    <div class="col-6 col-md-2 d-grid">
+      <button class="btn btn-outline-secondary" type="submit"><i class="bi bi-search me-1"></i>Search</button>
+    </div>
+  </form>
+</div>
+
+<div class="panel p-0">
+  <% if (!users.length) { %>
+    <div class="empty-state">
+      <i class="bi bi-people"></i>
+      <p class="mb-0">No users match your filters.</p>
+    </div>
+  <% } else { %>
+    <div class="table-responsive">
+      <table class="table data-table mb-0">
+        <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Status</th><th>Joined</th><th class="text-end">Actions</th></tr></thead>
+        <tbody>
+          <% users.forEach(u => { %>
+            <tr>
+              <td class="fw-semibold d-flex align-items-center gap-2">
+                <span class="avatar-sm" style="background: linear-gradient(135deg,#3e5c76,#29405a);"><%= u.avatarInitials %></span>
+                <%= u.name %>
+              </td>
+              <td class="text-muted"><%= u.email %></td>
+             <td>
+  <% if (u.role === 'admin') { %>
+    <span class="stamp stamp-critical">Administrator</span>
+
+  <% } else if (u.role === 'project_manager') { %>
+    <span class="stamp stamp-review">Project Manager</span>
+
+  <% } else { %>
+    <span class="stamp stamp-completed">Team Member</span>
+
+  <% } %>
+</td>
+              <td>
+                <% if (u.isActive) { %>
+                  <span class="stamp stamp-completed">Active</span>
+                <% } else { %>
+                  <span class="stamp stamp-critical">Inactive</span>
+                <% } %>
+              </td>
+              <td class="text-muted small"><%= dayjs(u.createdAt).format('MMM D, YYYY') %></td>
+              <td class="text-end">
+                <div class="d-inline-flex gap-1">
+                  <a href="/admin/users/<%= u._id %>/edit" class="btn btn-sm btn-outline-secondary table-action-btn"><i class="bi bi-pencil"></i></a>
+                  <form action="/admin/users/<%= u._id %>/toggle-active?_method=PATCH" method="POST" class="d-inline">
+                    <button class="btn btn-sm btn-outline-secondary table-action-btn" title="Toggle active">
+                      <i class="bi <%= u.isActive ? 'bi-pause-circle' : 'bi-play-circle' %>"></i>
+                    </button>
+                  </form>
+                  <% if (u._id.toString() !== currentUser._id.toString()) { %>
+                    <form action="/admin/users/<%= u._id %>?_method=DELETE" method="POST" class="d-inline" data-confirm="Delete <%= u.name %>? This cannot be undone.">
+                      <button class="btn btn-sm btn-outline-danger table-action-btn"><i class="bi bi-trash"></i></button>
+                    </form>
+                  <% } %>
+                </div>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  <% } %>
+</div>
