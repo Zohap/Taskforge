@@ -29,34 +29,89 @@ exports.dashboard = catchAsync(async (req, res) => {
     });
   }
 
-  if (user.role === ROLES.PROJECT_MANAGER) {
-    const myProjects = await Project.find({ projectManager: user._id }).sort({ createdAt: -1 });
-    const projectIds = myProjects.map((p) => p._id);
+ if (user.role === ROLES.ADMIN) {
+  const [
+    totalUsers,
+    totalProjects,
+    activeProjects,
+    totalTasks,
+    completedTasks,
+    overdueProjects,
+    recentProjects,
+    activeProjectCount,
+    completedProjectCount,
+    onHoldProjectCount,
+    highPriorityCount,
+    mediumPriorityCount,
+    lowPriorityCount,
+  ] = await Promise.all([
+    User.countDocuments(),
 
-    const [totalTasks, pendingTasks, completedTasks, upcomingDeadlines] = await Promise.all([
-      Task.countDocuments({ project: { $in: projectIds } }),
-      Task.countDocuments({ project: { $in: projectIds }, status: { $ne: 'Completed' } }),
-      Task.countDocuments({ project: { $in: projectIds }, status: 'Completed' }),
-      Task.find({ project: { $in: projectIds }, dueDate: { $lte: soon, $gte: now }, status: { $ne: 'Completed' } })
-        .populate('project', 'name')
-        .populate('assignedTo', 'name')
-        .sort({ dueDate: 1 })
-        .limit(8),
-    ]);
+    Project.countDocuments(),
 
-    return res.render('pm/dashboard', {
-      title: 'Project Manager Dashboard',
-      stats: {
-        activeProjects: myProjects.filter((p) => p.status === 'Active').length,
-        totalProjects: myProjects.length,
-        totalTasks,
-        pendingTasks,
+    Project.countDocuments({ status: 'Active' }),
+
+    Task.countDocuments(),
+
+    Task.countDocuments({ status: 'Completed' }),
+
+    Project.countDocuments({
+      endDate: { $lt: now },
+      status: { $ne: 'Completed' },
+    }),
+
+    Project.find()
+      .populate('projectManager', 'name')
+      .sort({ createdAt: -1 })
+      .limit(6),
+
+    Project.countDocuments({ status: 'Active' }),
+
+    Project.countDocuments({ status: 'Completed' }),
+
+    Project.countDocuments({ status: 'On Hold' }),
+
+    Project.countDocuments({ priority: 'High' }),
+
+    Project.countDocuments({ priority: 'Medium' }),
+
+    Project.countDocuments({ priority: 'Low' }),
+  ]);
+
+  return res.render('admin/dashboard', {
+    title: 'Administrator Dashboard',
+
+    stats: {
+      totalUsers,
+      totalProjects,
+      activeProjects,
+      totalTasks,
+      completedTasks,
+      overdueProjects,
+    },
+
+    charts: {
+      projectStatus: [
+        activeProjectCount,
+        completedProjectCount,
+        onHoldProjectCount,
+      ],
+
+      taskProgress: [
         completedTasks,
-      },
-      myProjects: myProjects.slice(0, 6),
-      upcomingDeadlines,
-    });
-  }
+        totalTasks - completedTasks,
+      ],
+
+      priority: [
+        highPriorityCount,
+        mediumPriorityCount,
+        lowPriorityCount,
+      ],
+    },
+
+    recentProjects,
+  });
+}
 
   // Team member
   const myTasks = await Task.find({ assignedTo: user._id }).populate('project', 'name');

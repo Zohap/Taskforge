@@ -22,7 +22,64 @@
   <%- include('../partials/stat-card', { icon: 'bi-check2-circle', value: stats.completedTasks, label: 'Completed Tasks' }) %>
 </div>
 
+<!-- Dashboard Visuals -->
+<div class="row g-3 mb-4">
 
+  <!-- Project Overview -->
+  <div class="col-lg-6">
+    <div class="panel p-4 h-100">
+
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+          <h2 class="h6 mb-1">Project Overview</h2>
+          <p class="text-muted small mb-0">
+            Current project status
+          </p>
+        </div>
+
+        <i class="bi bi-pie-chart text-muted"></i>
+      </div>
+
+      <div style="height:280px;">
+       <canvas
+  id="projectChart"
+  data-active="<%= stats.activeProjects %>"
+  data-completed="<%= stats.completedProjects %>"
+  data-overdue="<%= stats.overdueProjects %>">
+</canvas>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- Task Overview -->
+  <div class="col-lg-6">
+    <div class="panel p-4 h-100">
+
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+          <h2 class="h6 mb-1">Task Overview</h2>
+          <p class="text-muted small mb-0">
+            Completed vs pending tasks
+          </p>
+        </div>
+
+        <i class="bi bi-bar-chart text-muted"></i>
+      </div>
+
+      <div style="height:280px;">
+       <canvas
+  id="taskChart"
+  data-completed="<%= stats.completedTasks %>"
+  data-pending="<%= stats.pendingTasks %>">
+</canvas>
+      </div>
+
+    </div>
+  </div>
+
+</div>
 
 <div class="panel p-4">
   <div class="d-flex justify-content-between align-items-center mb-3">
@@ -97,3 +154,117 @@
     </div>
   <% } %>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+  // Project Chart
+  const projectCanvas = document.getElementById('projectChart');
+
+  if (projectCanvas) {
+
+    const activeProjects = Number(projectCanvas.dataset.active);
+    const completedProjects = Number(projectCanvas.dataset.completed);
+    const overdueProjects = Number(projectCanvas.dataset.overdue);
+
+    new Chart(projectCanvas, {
+      type: 'doughnut',
+
+      data: {
+        labels: [
+          'Active Projects',
+          'Completed Projects',
+          'Overdue Projects'
+        ],
+
+        datasets: [{
+          data: [
+            activeProjects,
+            completedProjects,
+            overdueProjects
+          ],
+
+          backgroundColor: [
+            '#3e5c76',
+            '#6c8a5b',
+            '#b85c38'
+          ],
+
+          borderWidth: 0
+        }]
+      },
+
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+
+        plugins: {
+          legend: {
+            position: 'bottom'
+          }
+        }
+      }
+    });
+  }
+
+
+  // Task Chart
+  const taskCanvas = document.getElementById('taskChart');
+
+  if (taskCanvas) {
+
+    const completedTasks = Number(taskCanvas.dataset.completed);
+    const pendingTasks = Number(taskCanvas.dataset.pending);
+
+    new Chart(taskCanvas, {
+      type: 'bar',
+
+      data: {
+        labels: [
+          'Completed',
+          'Pending'
+        ],
+
+        datasets: [{
+          label: 'Tasks',
+
+          data: [
+            completedTasks,
+            pendingTasks
+          ],
+
+          backgroundColor: [
+            '#6c8a5b',
+            '#b85c38'
+          ],
+
+          borderRadius: 6
+        }]
+      },
+
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+
+        scales: {
+          y: {
+            beginAtZero: true,
+
+            ticks: {
+              precision: 0
+            }
+          }
+        },
+
+        plugins: {
+          legend: {
+            display: false
+          }
+        }
+      }
+    });
+  }
+
+});
+</script>

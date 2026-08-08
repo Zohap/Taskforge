@@ -4,65 +4,394 @@
     <h1 class="h3 mb-0">Welcome back, <%= currentUser.name.split(' ')[0] %></h1>
     <p class="text-muted mb-0">Here's the status of the projects assigned to you.</p>
   </div>
-  <a href="/pm/projects" class="btn btn-ember"><i class="bi bi-diagram-3 me-1"></i> View My Projects</a>
+
+  <a href="/pm/projects" class="btn btn-ember">
+    <i class="bi bi-diagram-3 me-1"></i> View My Projects
+  </a>
 </div>
+
+
+<!-- =========================
+     STAT CARDS
+========================= -->
 
 <div class="row g-3 mb-4">
-  <%- include('../partials/stat-card', { icon: 'bi-folder2-open', value: stats.totalProjects, label: 'Assigned Projects' }) %>
-  <%- include('../partials/stat-card', { icon: 'bi-lightning-charge', value: stats.activeProjects, label: 'Active Projects' }) %>
-  <%- include('../partials/stat-card', { icon: 'bi-hourglass-split', value: stats.pendingTasks, label: 'Pending Tasks' }) %>
-  <%- include('../partials/stat-card', { icon: 'bi-check2-circle', value: stats.completedTasks, label: 'Completed Tasks' }) %>
+
+  <%- include('../partials/stat-card', {
+    icon: 'bi-folder2-open',
+    value: stats.totalProjects,
+    label: 'Assigned Projects'
+  }) %>
+
+  <%- include('../partials/stat-card', {
+    icon: 'bi-lightning-charge',
+    value: stats.activeProjects,
+    label: 'Active Projects'
+  }) %>
+
+  <%- include('../partials/stat-card', {
+    icon: 'bi-hourglass-split',
+    value: stats.pendingTasks,
+    label: 'Pending Tasks'
+  }) %>
+
+  <%- include('../partials/stat-card', {
+    icon: 'bi-check2-circle',
+    value: stats.completedTasks,
+    label: 'Completed Tasks'
+  }) %>
+
 </div>
+
+
+<!-- =========================
+     DASHBOARD VISUALS
+========================= -->
+
+<div class="row g-4 mb-4">
+
+  <!-- Task Progress Chart -->
+  <div class="col-lg-7">
+
+    <div class="panel p-4 h-100">
+
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+          <h2 class="h6 mb-1">Task Progress</h2>
+          <p class="text-muted small mb-0">
+            Overview of completed and pending tasks
+          </p>
+        </div>
+
+        <span class="stamp stamp-completed">
+          <%= stats.totalTasks %> Total
+        </span>
+      </div>
+
+      <!-- Data stored safely in HTML -->
+      <div
+        id="pmTaskChartData"
+        data-completed="<%= stats.completedTasks %>"
+        data-pending="<%= stats.pendingTasks %>"
+        style="display:none;">
+      </div>
+
+      <div style="height:280px; position:relative;">
+        <canvas id="pmTaskChart"></canvas>
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- Project Overview Chart -->
+  <div class="col-lg-5">
+
+    <div class="panel p-4 h-100">
+
+      <div class="mb-3">
+        <h2 class="h6 mb-1">Project Overview</h2>
+        <p class="text-muted small mb-0">
+          Current project distribution
+        </p>
+      </div>
+
+      <!-- Data stored safely in HTML -->
+      <div
+        id="pmProjectChartData"
+        data-active="<%= stats.activeProjects %>"
+        data-other="<%= stats.totalProjects - stats.activeProjects %>"
+        style="display:none;">
+      </div>
+
+      <div style="height:280px; position:relative;">
+        <canvas id="pmProjectChart"></canvas>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- =========================
+     PROJECTS + DEADLINES
+========================= -->
 
 <div class="row g-4">
+
+  <!-- My Projects -->
   <div class="col-lg-7">
+
     <div class="panel p-4 h-100">
+
       <div class="d-flex justify-content-between align-items-center mb-3">
-        <h2 class="h6 mb-0">My Projects</h2>
-        <a href="/pm/projects" class="small text-decoration-none">View all <i class="bi bi-arrow-right"></i></a>
+
+        <div>
+          <h2 class="h6 mb-1">My Projects</h2>
+          <p class="text-muted small mb-0">
+            Projects currently assigned to you
+          </p>
+        </div>
+
+        <a href="/pm/projects" class="small text-decoration-none">
+          View all
+          <i class="bi bi-arrow-right"></i>
+        </a>
+
       </div>
+
+
       <% if (!myProjects.length) { %>
+
         <div class="empty-state">
+
           <i class="bi bi-diagram-3"></i>
-          <p class="mb-0">No projects have been assigned to you yet.</p>
+
+          <p class="mb-0">
+            No projects have been assigned to you yet.
+          </p>
+
         </div>
+
       <% } else { %>
+
         <div class="d-flex flex-column gap-2">
+
           <% myProjects.forEach(p => { %>
-            <a href="/projects/<%= p._id %>" class="list-row d-flex justify-content-between align-items-center text-decoration-none text-reset">
+
+            <a
+              href="/projects/<%= p._id %>"
+              class="list-row d-flex justify-content-between align-items-center text-decoration-none text-reset">
+
               <div>
-                <div class="fw-semibold"><%= p.name %></div>
-                <div class="text-muted small">Due <%= dayjs(p.endDate).format('MMM D, YYYY') %></div>
+
+                <div class="fw-semibold">
+                  <%= p.name %>
+                </div>
+
+                <div class="text-muted small">
+                  Due <%= dayjs(p.endDate).format('MMM D, YYYY') %>
+                </div>
+
               </div>
-              <span class="stamp <%= projectStatusClass(p.status) %>"><%= p.status %></span>
+
+              <span class="stamp <%= projectStatusClass(p.status) %>">
+                <%= p.status %>
+              </span>
+
             </a>
+
           <% }) %>
+
         </div>
+
       <% } %>
+
     </div>
+
   </div>
 
+
+  <!-- Upcoming Deadlines -->
   <div class="col-lg-5">
+
     <div class="panel p-4 h-100">
-      <h2 class="h6 mb-3">Upcoming Deadlines</h2>
+
+      <div class="d-flex justify-content-between align-items-center mb-3">
+
+        <div>
+          <h2 class="h6 mb-1">Upcoming Deadlines</h2>
+          <p class="text-muted small mb-0">
+            Tasks due within the next 3 days
+          </p>
+        </div>
+
+        <i class="bi bi-calendar3 text-muted"></i>
+
+      </div>
+
+
       <% if (!upcomingDeadlines.length) { %>
+
         <div class="empty-state py-4">
+
           <i class="bi bi-calendar-check"></i>
-          <p class="mb-0">Nothing due in the next 3 days.</p>
+
+          <p class="mb-0">
+            Nothing due in the next 3 days.
+          </p>
+
         </div>
+
       <% } else { %>
+
         <div class="d-flex flex-column gap-2">
+
           <% upcomingDeadlines.forEach(t => { %>
-            <a href="/tasks/<%= t._id %>" class="list-row d-flex justify-content-between align-items-center text-decoration-none text-reset py-2 px-3">
+
+            <a
+              href="/tasks/<%= t._id %>"
+              class="list-row d-flex justify-content-between align-items-center text-decoration-none text-reset py-2 px-3">
+
               <div>
-                <div class="fw-semibold small"><%= t.title %></div>
-                <div class="text-muted" style="font-size:.75rem;"><%= t.project.name %> · <%= t.assignedTo ? t.assignedTo.name : 'Unassigned' %></div>
+
+                <div class="fw-semibold small">
+                  <%= t.title %>
+                </div>
+
+                <div class="text-muted" style="font-size:.75rem;">
+                  <%= t.project.name %>
+                  ·
+                  <%= t.assignedTo ? t.assignedTo.name : 'Unassigned' %>
+                </div>
+
               </div>
-              <span class="text-muted small"><%= dayjs(t.dueDate).format('MMM D') %></span>
+
+              <span class="text-muted small">
+                <%= dayjs(t.dueDate).format('MMM D') %>
+              </span>
+
             </a>
+
           <% }) %>
+
         </div>
+
       <% } %>
+
     </div>
+
   </div>
+
 </div>
+
+
+<!-- =========================
+     CHART.JS
+========================= -->
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+
+    /* =========================
+       TASK CHART
+    ========================= */
+
+    const taskData = document.getElementById('pmTaskChartData');
+    const taskCanvas = document.getElementById('pmTaskChart');
+
+    if (taskData && taskCanvas) {
+
+      const completed = Number(taskData.dataset.completed) || 0;
+      const pending = Number(taskData.dataset.pending) || 0;
+
+      new Chart(taskCanvas, {
+        type: 'doughnut',
+
+        data: {
+          labels: [
+            'Completed',
+            'Pending'
+          ],
+
+          datasets: [{
+            data: [
+              completed,
+              pending
+            ],
+
+            backgroundColor: [
+              '#6c8a5b',
+              '#b85c38'
+            ],
+
+            borderWidth: 0
+          }]
+        },
+
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+
+          cutout: '68%',
+
+          plugins: {
+            legend: {
+              position: 'bottom',
+
+              labels: {
+                padding: 18,
+                usePointStyle: true
+              }
+            }
+          }
+        }
+      });
+
+    }
+
+
+    /* =========================
+       PROJECT CHART
+    ========================= */
+
+    const projectData = document.getElementById('pmProjectChartData');
+    const projectCanvas = document.getElementById('pmProjectChart');
+
+    if (projectData && projectCanvas) {
+
+      const active = Number(projectData.dataset.active) || 0;
+      const other = Number(projectData.dataset.other) || 0;
+
+      new Chart(projectCanvas, {
+        type: 'doughnut',
+
+        data: {
+          labels: [
+            'Active Projects',
+            'Other Projects'
+          ],
+
+          datasets: [{
+            data: [
+              active,
+              other
+            ],
+
+            backgroundColor: [
+              '#3e5c76',
+              '#d9d2c5'
+            ],
+
+            borderWidth: 0
+          }]
+        },
+
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+
+          cutout: '68%',
+
+          plugins: {
+            legend: {
+              position: 'bottom',
+
+              labels: {
+                padding: 18,
+                usePointStyle: true
+              }
+            }
+          }
+        }
+      });
+
+    }
+
+  });
+</script>
