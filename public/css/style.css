@@ -440,24 +440,376 @@ a:hover { color: var(--ember-dark); }
 .btn-icon { background: transparent; border: none; color: var(--text-muted); }
 .btn-icon:hover { color: var(--heading); }
 
-/* ---------------- Auth page ---------------- */
-.auth-wrap {
+/* =========================================================
+   AUTH / LOGIN PAGE
+   ========================================================= */
+
+.auth-page {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  background: var(--panel);
+}
+
+
+/* ---------------- LEFT SIDE ---------------- */
+
+.auth-info {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 60px clamp(40px, 7vw, 100px);
+  background:
+    radial-gradient(circle at 80% 20%, #3b3e4c 0%, transparent 35%),
+    linear-gradient(145deg, #1c1e26 0%, #111218 100%);
+  color: #fff;
+  overflow: hidden;
+}
+
+/* subtle background decoration */
+.auth-info::before {
+  content: '';
+  position: absolute;
+  width: 380px;
+  height: 380px;
+  border: 1px solid rgba(232, 98, 44, 0.18);
+  border-radius: 50%;
+  right: -180px;
+  bottom: -160px;
+}
+
+.auth-info::after {
+  content: '';
+  position: absolute;
+  width: 220px;
+  height: 220px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 50%;
+  right: 60px;
+  top: -100px;
+}
+
+.auth-info-content {
+  width: 100%;
+  max-width: 520px;
+  position: relative;
+  z-index: 2;
+}
+
+
+/* Brand */
+
+.auth-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 90px;
+}
+
+.auth-brand .brand-mark {
+  width: 40px;
+  height: 40px;
+  font-size: 1.15rem;
+}
+
+.auth-brand .brand-name {
+  font-size: 1.15rem;
+}
+
+
+/* Intro */
+
+.auth-intro {
+  max-width: 500px;
+}
+
+.auth-eyebrow,
+.auth-form-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.67rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-weight: 600;
+}
+
+.auth-eyebrow {
+  color: #f08355;
+}
+
+.auth-intro h1 {
+  color: #fff;
+  font-size: clamp(2.5rem, 4vw, 4.1rem);
+  line-height: 1.08;
+  letter-spacing: -0.04em;
+  margin: 14px 0 22px;
+}
+
+.auth-intro h1 span {
+  color: var(--ember);
+}
+
+.auth-intro p {
+  color: #aeb0b9;
+  font-size: 0.95rem;
+  line-height: 1.8;
+  max-width: 470px;
+  margin: 0;
+}
+
+
+/* Features */
+
+.auth-features {
+  margin-top: 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.auth-feature {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.auth-feature-icon {
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+  border-radius: 9px;
+  background: rgba(232, 98, 44, 0.12);
+  border: 1px solid rgba(232, 98, 44, 0.2);
+  color: #f08355;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.auth-feature strong {
+  display: block;
+  font-size: 0.84rem;
+  color: #f4f4f5;
+  margin-bottom: 3px;
+}
+
+.auth-feature span {
+  display: block;
+  color: #858894;
+  font-size: 0.75rem;
+  line-height: 1.5;
+}
+
+
+/* Footer */
+
+.auth-info-footer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 60px;
+  color: #656874;
+}
+
+.auth-info-footer span {
+  width: 28px;
+  height: 1px;
+  background: var(--ember);
+}
+
+.auth-info-footer small {
+  font-size: 0.68rem;
+}
+
+
+/* ---------------- RIGHT SIDE ---------------- */
+
+.auth-form-side {
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--ink);
-  background-image: radial-gradient(circle at 20% 20%, #2a2d3a 0%, #1c1e26 55%);
-  padding: 20px;
+  padding: 50px clamp(25px, 6vw, 100px);
+  background: var(--canvas);
 }
-.auth-card {
+
+.auth-form-container {
   width: 100%;
-  max-width: 400px;
-  background: var(--panel);
-  border-radius: 12px;
-  padding: 36px 32px;
-  box-shadow: 0 20px 60px -12px rgba(0,0,0,0.5);
+  max-width: 430px;
 }
+
+
+/* Mobile logo - hidden desktop */
+
+.auth-mobile-brand {
+  display: none;
+}
+
+
+/* Heading */
+
+.auth-heading {
+  margin-bottom: 30px;
+}
+
+.auth-form-eyebrow {
+  color: var(--ember-dark);
+}
+
+.auth-heading h2 {
+  font-size: 1.8rem;
+  margin: 8px 0 8px;
+  letter-spacing: -0.025em;
+}
+
+.auth-heading p {
+  color: var(--text-muted);
+  font-size: 0.84rem;
+  margin: 0;
+}
+
+
+/* Input with icons */
+
+.auth-input {
+  position: relative;
+}
+
+.auth-input > i {
+  position: absolute;
+  left: 13px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  z-index: 2;
+}
+
+.auth-input .form-control {
+  height: 46px;
+  padding-left: 39px;
+  background: var(--panel);
+}
+
+.auth-input .form-control:focus + i {
+  color: var(--ember);
+}
+
+
+/* Login button */
+
+.auth-submit {
+  height: 46px;
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: all 0.2s ease;
+}
+
+.auth-submit i {
+  transition: transform 0.2s ease;
+}
+
+.auth-submit:hover i {
+  transform: translateX(4px);
+}
+
+
+/* Divider */
+
+.auth-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 30px 0 18px;
+  color: var(--text-muted);
+  font-size: 0.68rem;
+  white-space: nowrap;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+  content: '';
+  height: 1px;
+  background: var(--border);
+  flex: 1;
+}
+
+
+/* Note */
+
+.auth-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  color: var(--text-muted);
+  font-size: 0.72rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.auth-note i {
+  color: var(--success);
+  font-size: 0.9rem;
+  margin-top: 1px;
+  flex-shrink: 0;
+}
+
+
+/* ---------------- DARK MODE ---------------- */
+
+[data-theme='dark'] .auth-form-side {
+  background: #14151b;
+}
+
+[data-theme='dark'] .auth-input .form-control {
+  background: #1c1e26;
+  color: var(--text-primary);
+}
+
+[data-theme='dark'] .auth-heading h2 {
+  color: #f5f5f7;
+}
+
+
+/* ---------------- RESPONSIVE ---------------- */
+
+@media (max-width: 900px) {
+
+  .auth-page {
+    grid-template-columns: 1fr;
+  }
+
+  .auth-info {
+    display: none;
+  }
+
+  .auth-form-side {
+    min-height: 100vh;
+    padding: 40px 25px;
+  }
+
+  .auth-mobile-brand {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    margin-bottom: 55px;
+  }
+
+  .auth-mobile-brand .brand-mark {
+    width: 38px;
+    height: 38px;
+  }
+
+  .auth-mobile-brand .brand-name {
+    color: var(--heading);
+  }
+
+}
+
+
 
 /* ---------------- Comments / discussion ---------------- */
 .comment {
@@ -553,4 +905,806 @@ a:focus-visible, button:focus-visible, .nav-link:focus-visible {
 }
 .avatar-sm{
     box-shadow:0 4px 12px rgba(0,0,0,.12);
+}
+
+@media (max-width: 480px) {
+
+  .auth-form-side {
+    padding: 30px 20px;
+  }
+
+  .auth-mobile-brand {
+    margin-bottom: 45px;
+  }
+
+  .auth-heading h2 {
+    font-size: 1.55rem;
+  }
+
+  .auth-heading {
+    margin-bottom: 25px;
+  }
+
+}
+/* =========================================================
+   TEAM ATTENDANCE - MOBILE CARDS
+   ========================================================= */
+
+.attendance-mobile-list {
+  display: none;
+}
+
+.attendance-mobile-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 15px;
+  width: 100%;
+}
+
+.attendance-mobile-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.attendance-mobile-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.attendance-mobile-name {
+  min-width: 0;
+}
+
+.attendance-mobile-name strong {
+  display: block;
+  color: var(--heading);
+  font-size: 0.86rem;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 180px;
+}
+
+.attendance-mobile-name span {
+  display: block;
+  color: var(--text-muted);
+  font-size: 0.7rem;
+  margin-top: 2px;
+  word-break: break-word;
+}
+
+.attendance-mobile-top .stamp {
+  flex-shrink: 0;
+}
+
+
+/* Details */
+
+.attendance-mobile-details {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 13px 10px;
+  margin-top: 15px;
+  padding-top: 13px;
+  border-top: 1px solid var(--border);
+}
+
+.attendance-mobile-details > div {
+  min-width: 0;
+}
+
+.attendance-mobile-details small {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.61rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+.attendance-mobile-details strong {
+  display: block;
+  color: var(--text-primary);
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+
+/* Dark mode */
+
+[data-theme="dark"] .attendance-mobile-card {
+  background: var(--panel);
+  border-color: var(--border);
+}
+
+
+/* Mobile */
+
+@media (max-width: 767.98px) {
+
+  .attendance-table-desktop {
+    display: none;
+  }
+
+  .attendance-mobile-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+}
+
+
+/* Small phones */
+
+@media (max-width: 480px) {
+
+  .attendance-mobile-card {
+    padding: 13px;
+  }
+
+  .attendance-mobile-top {
+    gap: 8px;
+  }
+
+  .attendance-mobile-name strong {
+    max-width: 145px;
+  }
+
+  .attendance-mobile-top .stamp {
+    font-size: 0.58rem;
+    padding: 3px 7px;
+  }
+
+  .attendance-mobile-details {
+    gap: 12px 8px;
+  }
+
+}
+/* =========================================================
+   MANAGE USERS
+   ========================================================= */
+
+/* Desktop / Tablet */
+.users-mobile-list {
+  display: none;
+}
+
+.users-table-desktop {
+  display: block;
+}
+
+
+/* =========================================================
+   MOBILE MANAGE USERS
+   ========================================================= */
+
+@media (max-width: 767.98px) {
+
+  /* Hide desktop table */
+  .users-table-desktop {
+    display: none !important;
+  }
+
+  /* Show mobile cards */
+  .users-mobile-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 12px;
+    width: 100%;
+  }
+
+  /* Individual card */
+  .user-mobile-card {
+    width: 100%;
+    min-width: 0;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px;
+    box-sizing: border-box;
+  }
+
+  /* Top section */
+  .user-mobile-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+    width: 100%;
+  }
+
+  /* Avatar + name/email */
+  .user-mobile-identity {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+    flex: 1;
+  }
+
+  /* Name and email container */
+  .user-mobile-name {
+    min-width: 0;
+    flex: 1;
+  }
+
+  /* Name */
+  .user-mobile-name strong {
+    display: block;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--heading);
+    line-height: 1.3;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* Email */
+  .user-mobile-name span {
+    display: block;
+    margin-top: 3px;
+    color: var(--text-muted);
+    font-size: 0.72rem;
+    line-height: 1.4;
+
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  /* Status badge */
+  .user-mobile-status {
+    flex-shrink: 0;
+  }
+
+  .user-mobile-status .stamp {
+    font-size: 0.58rem;
+    padding: 3px 7px;
+  }
+
+
+  /* =======================================================
+     DETAILS
+     ======================================================= */
+
+  .user-mobile-details {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+
+    margin-top: 14px;
+    padding-top: 12px;
+
+    border-top: 1px solid var(--border);
+  }
+
+  .user-mobile-details > div {
+    min-width: 0;
+  }
+
+  /* Labels: Role / Joined */
+  .user-mobile-details small {
+    display: block;
+
+    margin-bottom: 5px;
+
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    font-weight: 600;
+
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+
+    color: var(--text-muted);
+  }
+
+  /* Joined date */
+  .user-mobile-details > div > span:not(.stamp) {
+    font-size: 0.76rem;
+    color: var(--text-primary);
+  }
+
+  /* Role badge */
+  .user-mobile-details .stamp {
+    max-width: 100%;
+    font-size: 0.56rem;
+    padding: 3px 7px;
+  }
+
+
+  /* =======================================================
+     ACTIONS
+     ======================================================= */
+
+  .user-mobile-actions {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 7px;
+
+    margin-top: 14px;
+    padding-top: 12px;
+
+    border-top: 1px solid var(--border);
+  }
+
+  .user-mobile-actions form {
+    margin: 0;
+    min-width: 0;
+  }
+
+  .user-mobile-actions .btn,
+  .user-mobile-actions > a {
+    width: 100%;
+    min-width: 0;
+    min-height: 34px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 5px 4px;
+
+    font-size: 0.68rem;
+    line-height: 1.2;
+
+    white-space: nowrap;
+  }
+
+  .user-mobile-actions .btn i {
+    font-size: 0.72rem;
+  }
+
+
+  /* =======================================================
+     DARK MODE
+     ======================================================= */
+
+  [data-theme="dark"] .user-mobile-card {
+    background: var(--panel);
+    border-color: var(--border);
+  }
+
+}
+
+
+/* =========================================================
+   SMALL PHONES
+   ========================================================= */
+
+@media (max-width: 480px) {
+
+  .users-mobile-list {
+    padding: 10px;
+    gap: 10px;
+  }
+
+  .user-mobile-card {
+    padding: 13px;
+    border-radius: 10px;
+  }
+
+  .user-mobile-top {
+    gap: 8px;
+  }
+
+  .user-mobile-name strong {
+    font-size: 0.84rem;
+  }
+
+  .user-mobile-name span {
+    font-size: 0.69rem;
+  }
+
+  .user-mobile-details {
+    gap: 10px;
+    margin-top: 13px;
+    padding-top: 11px;
+  }
+
+  .user-mobile-actions {
+    gap: 6px;
+    margin-top: 13px;
+    padding-top: 11px;
+  }
+
+  .user-mobile-actions .btn,
+  .user-mobile-actions > a {
+    min-height: 33px;
+    font-size: 0.64rem;
+    padding: 5px 3px;
+  }
+
+  .user-mobile-actions .btn i {
+    display: none;
+  }
+
+  .user-mobile-details .stamp {
+    font-size: 0.53rem;
+    padding: 3px 6px;
+  }
+
+}
+
+
+/* =========================================================
+   VERY SMALL PHONES
+   ========================================================= */
+
+@media (max-width: 360px) {
+
+  .user-mobile-card {
+    padding: 11px;
+  }
+
+  .user-mobile-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .user-mobile-actions .btn,
+  .user-mobile-actions > a {
+    width: 100%;
+  }
+
+}
+@media (max-width: 768px) {
+
+  .calendar-panel {
+    padding: 10px;
+  }
+
+  /* Calendar toolbar */
+  .fc .fc-toolbar {
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .fc .fc-toolbar-title {
+    font-size: 1rem;
+  }
+
+  /* Previous / Next / Today buttons */
+  .fc .fc-button {
+    font-size: 0.65rem;
+    padding: 3px 6px;
+    min-height: 30px;
+    height: 30px;
+    line-height: 1.2;
+  }
+
+  /* Previous + Next arrows */
+  .fc .fc-prev-button,
+  .fc .fc-next-button {
+    width: 32px;
+    height: 30px;
+    padding: 3px;
+  }
+
+  /* Today button */
+  .fc .fc-today-button {
+    font-size: 0.65rem;
+    padding: 3px 7px;
+    height: 30px;
+  }
+
+  /* Month / Week / List buttons */
+  .fc .fc-button-group .fc-button {
+    font-size: 0.65rem;
+    padding: 3px 7px;
+    height: 30px;
+  }
+
+  .fc .fc-daygrid-day-number {
+    font-size: 0.7rem;
+  }
+
+  .fc .fc-col-header-cell-cushion {
+    font-size: 0.62rem;
+  }
+
+  .fc-event {
+    font-size: 0.65rem;
+    padding: 2px 3px;
+  }
+}
+.text-muted {
+  color: var(--text-muted) !important;
+}
+/* =========================================================
+   MY TASKS - MOBILE CARDS
+   ========================================================= */
+
+.tasks-mobile-list {
+  display: none;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 767.98px) {
+
+  /* Hide desktop table */
+  .tasks-table-desktop {
+    display: none !important;
+  }
+
+
+  /* Show mobile cards */
+  .tasks-mobile-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+
+  /* Card */
+  .task-mobile-card {
+    width: 100%;
+    min-width: 0;
+
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+
+    padding: 14px;
+  }
+
+
+  /* =====================================================
+     CARD HEADER
+     ===================================================== */
+
+  .task-mobile-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 10px;
+
+    padding-bottom: 12px;
+
+    border-bottom: 1px solid var(--border);
+  }
+
+
+  .task-mobile-identity {
+    display: flex;
+    align-items: flex-start;
+
+    gap: 10px;
+
+    min-width: 0;
+    flex: 1;
+  }
+
+
+  /* Task icon */
+
+  .task-mobile-icon {
+    width: 34px;
+    height: 34px;
+
+    min-width: 34px;
+
+    border-radius: 8px;
+
+    background: #fff3ec;
+    color: var(--ember);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 15px;
+  }
+
+
+  /* Dark mode icon */
+
+  [data-theme="dark"] .task-mobile-icon {
+    background: #2b2d39;
+    color: var(--ember);
+  }
+
+
+  /* Task name */
+
+  .task-mobile-name {
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+  }
+
+
+  .task-mobile-name strong {
+    display: block;
+
+    color: var(--heading);
+
+    font-size: 0.88rem;
+    font-weight: 600;
+
+    line-height: 1.35;
+
+    word-break: break-word;
+  }
+
+
+  /* Project */
+
+  .task-mobile-name > span {
+    display: block;
+
+    margin-top: 3px;
+
+    color: var(--text-muted);
+
+    font-size: 0.72rem;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+
+  .task-mobile-name > span i {
+    margin-right: 2px;
+  }
+
+
+  /* Status badge */
+
+  .task-mobile-top > .stamp {
+    flex-shrink: 0;
+
+    font-size: 0.58rem;
+    padding: 3px 7px;
+  }
+
+
+  /* =====================================================
+     DETAILS
+     ===================================================== */
+
+  .task-mobile-details {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 12px;
+
+    padding: 13px 0;
+  }
+
+
+  .task-mobile-details > div {
+    min-width: 0;
+  }
+
+
+  .task-mobile-details small,
+  .task-mobile-update small {
+
+    display: block;
+
+    font-family: var(--font-mono);
+
+    font-size: 0.62rem;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.06em;
+
+    color: var(--text-muted);
+
+    margin-bottom: 5px;
+  }
+
+
+  .task-mobile-details > div > span:not(.stamp) {
+
+    display: block;
+
+    color: var(--text-primary);
+
+    font-size: 0.78rem;
+  }
+
+
+  .task-mobile-details .stamp {
+
+    font-size: 0.58rem;
+
+    padding: 3px 7px;
+  }
+
+
+  /* =====================================================
+     UPDATE STATUS
+     ===================================================== */
+
+  .task-mobile-update {
+
+    padding-top: 12px;
+
+    border-top: 1px solid var(--border);
+  }
+
+
+  .task-mobile-update form {
+    margin-top: 6px;
+  }
+
+
+  .task-mobile-update .form-select {
+
+    width: 100% !important;
+
+    min-height: 34px;
+
+    font-size: 0.75rem;
+  }
+
+}
+
+
+/* =========================================================
+   VERY SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 400px) {
+
+  .tasks-mobile-list {
+    gap: 10px;
+  }
+
+
+  .task-mobile-card {
+    padding: 13px;
+  }
+
+
+  .task-mobile-top {
+    gap: 7px;
+  }
+
+
+  .task-mobile-icon {
+
+    width: 31px;
+    height: 31px;
+
+    min-width: 31px;
+
+    font-size: 14px;
+  }
+
+
+  .task-mobile-name strong {
+    font-size: 0.84rem;
+  }
+
+
+  .task-mobile-name > span {
+    font-size: 0.68rem;
+  }
+
+
+  .task-mobile-details {
+    gap: 8px;
+  }
+
 }

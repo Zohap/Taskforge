@@ -1,0 +1,347 @@
+<div class="page-header">
+
+  <div>
+    <span class="eyebrow">Admin Portal</span>
+
+    <h1 class="h3 mb-0">
+      Attendance
+    </h1>
+
+    <p class="text-muted mb-0">
+      Manage your attendance and monitor attendance across the organization.
+    </p>
+  </div>
+
+</div>
+
+
+<!-- =============================== -->
+<!-- MY ATTENDANCE -->
+<!-- =============================== -->
+
+<div class="panel p-4 mb-4">
+
+  <div class="d-flex justify-content-between align-items-center mb-3">
+
+    <div>
+
+      <h2 class="h6 mb-1">
+        Today's Attendance
+      </h2>
+
+      <p class="text-muted small mb-0">
+        <%= dayjs().format('MMM D, YYYY') %>
+      </p>
+
+    </div>
+
+    <i class="bi bi-calendar-check fs-4"></i>
+
+  </div>
+
+
+  <% if (!todayAttendance) { %>
+
+    <form action="/admin/attendance/check-in" method="POST">
+
+      <button type="submit" class="btn btn-ember">
+        <i class="bi bi-box-arrow-in-right me-1"></i>
+        Check In
+      </button>
+
+    </form>
+
+
+  <% } else if (!todayAttendance.checkOut) { %>
+
+    <div class="d-flex align-items-center gap-3">
+
+      <span class="stamp <%= todayAttendance.status === 'Late'
+        ? 'stamp-warning'
+        : 'stamp-completed' %>">
+
+        <%= todayAttendance.status %>
+
+      </span>
+
+
+      <form action="/admin/attendance/check-out" method="POST">
+
+        <button type="submit" class="btn btn-ember">
+          <i class="bi bi-box-arrow-right me-1"></i>
+          Check Out
+        </button>
+
+      </form>
+
+    </div>
+
+
+  <% } else { %>
+
+    <span class="stamp stamp-completed">
+
+      <i class="bi bi-check-circle me-1"></i>
+
+      Day Completed
+
+    </span>
+
+  <% } %>
+
+
+  <% if (todayAttendance) { %>
+
+    <hr class="my-4">
+
+
+    <div class="row g-3">
+
+      <div class="col-md-4">
+
+        <div class="text-muted small">
+          Check In
+        </div>
+
+        <div class="fw-semibold">
+
+          <%= dayjs(todayAttendance.checkIn).format('hh:mm A') %>
+
+        </div>
+
+      </div>
+
+
+      <div class="col-md-4">
+
+        <div class="text-muted small">
+          Check Out
+        </div>
+
+        <div class="fw-semibold">
+
+          <% if (todayAttendance.checkOut) { %>
+
+            <%= dayjs(todayAttendance.checkOut).format('hh:mm A') %>
+
+          <% } else { %>
+
+            Not checked out
+
+          <% } %>
+
+        </div>
+
+      </div>
+
+
+      <div class="col-md-4">
+
+        <div class="text-muted small">
+          Working Hours
+        </div>
+
+        <div class="fw-semibold">
+
+          <% if (todayAttendance.checkOut) { %>
+
+            <%= todayAttendance.workingHours %> hours
+
+          <% } else { %>
+
+            In progress
+
+          <% } %>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  <% } %>
+
+</div>
+
+
+<!-- =============================== -->
+<!-- ALL ATTENDANCE -->
+<!-- =============================== -->
+
+<div class="panel p-4">
+
+  <div class="d-flex justify-content-between align-items-center mb-3">
+
+    <div>
+
+      <h2 class="h6 mb-1">
+        Organization Attendance
+      </h2>
+
+      <p class="text-muted small mb-0">
+        Attendance records of all users
+      </p>
+
+    </div>
+
+    <i class="bi bi-people fs-4"></i>
+
+  </div>
+
+
+  <% if (!attendance.length) { %>
+
+    <div class="empty-state py-5">
+
+      <i class="bi bi-calendar-check"></i>
+
+      <p class="mb-0">
+        No attendance records found.
+      </p>
+
+    </div>
+
+
+  <% } else { %>
+
+
+    <div class="table-responsive">
+
+      <table class="table align-middle mb-0">
+
+        <thead>
+
+          <tr>
+
+            <th>Name</th>
+
+            <th>Role</th>
+
+            <th>Date</th>
+
+            <th>Check In</th>
+
+            <th>Check Out</th>
+
+            <th>Status</th>
+
+            <th>Working Hours</th>
+
+          </tr>
+
+        </thead>
+
+
+        <tbody>
+
+          <% attendance.forEach(record => { %>
+
+            <tr>
+
+              <td>
+
+                <div class="fw-semibold">
+
+                  <%= record.user ? record.user.name : 'Unknown User' %>
+
+                </div>
+
+                <% if (record.user) { %>
+
+                  <div class="text-muted small">
+                    <%= record.user.email %>
+                  </div>
+
+                <% } %>
+
+              </td>
+
+
+              <td>
+
+                <%= record.user ? record.user.role : '—' %>
+
+              </td>
+
+
+              <td>
+
+                <%= dayjs(record.date).format('MMM D, YYYY') %>
+
+              </td>
+
+
+              <td>
+
+                <% if (record.checkIn) { %>
+
+                  <%= dayjs(record.checkIn).format('hh:mm A') %>
+
+                <% } else { %>
+
+                  —
+
+                <% } %>
+
+              </td>
+
+
+              <td>
+
+                <% if (record.checkOut) { %>
+
+                  <%= dayjs(record.checkOut).format('hh:mm A') %>
+
+                <% } else { %>
+
+                  —
+
+                <% } %>
+
+              </td>
+
+
+              <td>
+
+                <span class="stamp
+                  <%= record.status === 'Late'
+                    ? 'stamp-warning'
+                    : record.status === 'Present'
+                    ? 'stamp-completed'
+                    : '' %>">
+
+                  <%= record.status %>
+
+                </span>
+
+              </td>
+
+
+              <td>
+
+                <% if (record.checkOut) { %>
+
+                  <%= record.workingHours %> hrs
+
+                <% } else { %>
+
+                  —
+
+                <% } %>
+
+              </td>
+
+            </tr>
+
+          <% }) %>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+
+  <% } %>
+
+</div>

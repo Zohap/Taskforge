@@ -1,13 +1,36 @@
 <div class="page-header">
+
+  <!-- LEFT SIDE -->
   <div>
     <span class="eyebrow">Project Manager Portal</span>
-    <h1 class="h3 mb-0">Welcome back, <%= currentUser.name.split(' ')[0] %></h1>
-    <p class="text-muted mb-0">Here's the status of the projects assigned to you.</p>
+
+    <h1 class="h3 mb-0">
+      Welcome back, <%= currentUser.name.split(' ')[0] %>
+    </h1>
+
+    <p class="text-muted mb-0">
+      Here's the status of the projects assigned to you.
+    </p>
   </div>
 
-  <a href="/pm/projects" class="btn btn-ember">
-    <i class="bi bi-diagram-3 me-1"></i> View My Projects
-  </a>
+
+  <!-- RIGHT SIDE -->
+  <div class="d-flex gap-2 align-items-center">
+
+    <!-- My Projects -->
+    <a href="/pm/projects" class="btn btn-ember">
+      <i class="bi bi-folder2-open me-1"></i>
+      My Projects
+    </a>
+
+    <!-- Attendance -->
+    <a href="/attendance" class="btn btn-ember">
+      <i class="bi bi-calendar-check me-1"></i>
+      Attendance
+    </a>
+
+  </div>
+
 </div>
 
 

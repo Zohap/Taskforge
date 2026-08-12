@@ -1,0 +1,63 @@
+<div class="page-header">
+  <div>
+    <span class="eyebrow">Schedule</span>
+    <h1 class="h3 mb-1">Calendar</h1>
+    <p class="text-muted mb-0">
+      Keep track of project deadlines and task due dates.
+    </p>
+  </div>
+</div>
+
+<div class="panel calendar-panel">
+  <div id="calendar"></div>
+</div>
+
+<script
+  src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.19/index.global.min.js">
+</script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+
+    const calendarEl = document.getElementById('calendar');
+
+    const events = JSON.parse(
+      document.getElementById('calendar-data').textContent
+    );
+
+    const calendar = new FullCalendar.Calendar(calendarEl, {
+      initialView: 'dayGridMonth',
+
+      height: 'auto',
+
+      headerToolbar: {
+        left: 'prev,next today',
+        center: 'title',
+        right: 'dayGridMonth,timeGridWeek,listMonth'
+      },
+
+      buttonText: {
+        today: 'Today',
+        month: 'Month',
+        week: 'Week',
+        list: 'List'
+      },
+
+      events: events,
+
+      eventClick: function (info) {
+        info.jsEvent.preventDefault();
+
+        if (info.event.url) {
+          window.location.href = info.event.url;
+        }
+      }
+    });
+
+    calendar.render();
+  });
+</script>
+
+<script id="calendar-data" type="application/json">
+  <%- JSON.stringify(events || []) %>
+</script>

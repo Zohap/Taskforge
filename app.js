@@ -15,6 +15,7 @@ const { ROLE_LABELS } = require('./utils/constants');
 const dayjs = require('dayjs');
 
 const app = express();
+const attendanceRoutes = require('./routes/attendance');
 
 // --- Database ---
 connectDB();
@@ -28,6 +29,7 @@ app.set('layout', 'layouts/main');
 // --- Core middleware ---
 if (process.env.NODE_ENV !== 'test') app.use(morgan('dev'));
 app.use(express.urlencoded({ extended: true }));
+
 app.use(express.json());
 app.use(
   methodOverride((req) => {
@@ -87,6 +89,8 @@ app.use('/projects', require('./routes/projectRoutes'));
 app.use('/', require('./routes/taskRoutes'));
 app.use('/notifications', require('./routes/notificationRoutes'));
 app.use('/profile', require('./routes/profileRoutes'));
+app.use('/attendance', attendanceRoutes);
+app.use('/calendar', require('./routes/calendarRoutes'));
 
 // --- 404 ---
 app.use((req, res) => {

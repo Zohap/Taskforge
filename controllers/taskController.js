@@ -176,6 +176,21 @@ exports.details = catchAsync(async (req, res) => {
     canUpdateStatus: isManager || isAssignee,
     TASK_STATUS,
   });
+  
+
+console.log('===== TASK ACCESS DEBUG =====');
+console.log('User:', req.user.name);
+console.log('User ID:', req.user._id.toString());
+console.log('User Role:', req.user.role);
+console.log('Task:', task.title);
+console.log('Task Project:', task.project._id.toString());
+console.log(
+  'Project Manager:',
+  task.project.projectManager
+    ? task.project.projectManager.toString()
+    : null
+);
+console.log('Is Manager:', isManager);
 });
 
 exports.updateStatusValidators = [body('status').isIn(TASK_STATUS).withMessage('Invalid status')];

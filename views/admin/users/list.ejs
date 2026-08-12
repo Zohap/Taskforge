@@ -43,34 +43,55 @@
 
 <div class="panel p-0">
   <% if (!users.length) { %>
+
     <div class="empty-state">
       <i class="bi bi-people"></i>
       <p class="mb-0">No users match your filters.</p>
     </div>
+
   <% } else { %>
-    <div class="table-responsive">
+
+    <!-- Desktop / Tablet -->
+    <div class="table-responsive users-table-desktop">
       <table class="table data-table mb-0">
-        <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Status</th><th>Joined</th><th class="text-end">Actions</th></tr></thead>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Status</th>
+            <th>Joined</th>
+            <th class="text-end">Actions</th>
+          </tr>
+        </thead>
+
         <tbody>
           <% users.forEach(u => { %>
             <tr>
-              <td class="fw-semibold d-flex align-items-center gap-2">
-                <span class="avatar-sm" style="background: linear-gradient(135deg,#3e5c76,#29405a);"><%= u.avatarInitials %></span>
-                <%= u.name %>
+              <td class="fw-semibold">
+                <div class="d-flex align-items-center gap-2">
+                  <span class="avatar-sm"
+                    style="background: linear-gradient(135deg,#3e5c76,#29405a);">
+                    <%= u.avatarInitials %>
+                  </span>
+                  <%= u.name %>
+                </div>
               </td>
-              <td class="text-muted"><%= u.email %></td>
-             <td>
-  <% if (u.role === 'admin') { %>
-    <span class="stamp stamp-critical">Administrator</span>
 
-  <% } else if (u.role === 'project_manager') { %>
-    <span class="stamp stamp-review">Project Manager</span>
+              <td class="text-muted">
+                <%= u.email %>
+              </td>
 
-  <% } else { %>
-    <span class="stamp stamp-completed">Team Member</span>
+              <td>
+                <% if (u.role === 'admin') { %>
+                  <span class="stamp stamp-critical">Administrator</span>
+                <% } else if (u.role === 'project_manager') { %>
+                  <span class="stamp stamp-review">Project Manager</span>
+                <% } else { %>
+                  <span class="stamp stamp-completed">Team Member</span>
+                <% } %>
+              </td>
 
-  <% } %>
-</td>
               <td>
                 <% if (u.isActive) { %>
                   <span class="stamp stamp-completed">Active</span>
@@ -78,18 +99,35 @@
                   <span class="stamp stamp-critical">Inactive</span>
                 <% } %>
               </td>
-              <td class="text-muted small"><%= dayjs(u.createdAt).format('MMM D, YYYY') %></td>
+
+              <td class="text-muted small">
+                <%= dayjs(u.createdAt).format('MMM D, YYYY') %>
+              </td>
+
               <td class="text-end">
                 <div class="d-inline-flex gap-1">
-                  <a href="/admin/users/<%= u._id %>/edit" class="btn btn-sm btn-outline-secondary table-action-btn"><i class="bi bi-pencil"></i></a>
-                  <form action="/admin/users/<%= u._id %>/toggle-active?_method=PATCH" method="POST" class="d-inline">
-                    <button class="btn btn-sm btn-outline-secondary table-action-btn" title="Toggle active">
+                  <a href="/admin/users/<%= u._id %>/edit"
+                     class="btn btn-sm btn-outline-secondary table-action-btn">
+                    <i class="bi bi-pencil"></i>
+                  </a>
+
+                  <form action="/admin/users/<%= u._id %>/toggle-active?_method=PATCH"
+                        method="POST"
+                        class="d-inline">
+                    <button class="btn btn-sm btn-outline-secondary table-action-btn"
+                            title="Toggle active">
                       <i class="bi <%= u.isActive ? 'bi-pause-circle' : 'bi-play-circle' %>"></i>
                     </button>
                   </form>
+
                   <% if (u._id.toString() !== currentUser._id.toString()) { %>
-                    <form action="/admin/users/<%= u._id %>?_method=DELETE" method="POST" class="d-inline" data-confirm="Delete <%= u.name %>? This cannot be undone.">
-                      <button class="btn btn-sm btn-outline-danger table-action-btn"><i class="bi bi-trash"></i></button>
+                    <form action="/admin/users/<%= u._id %>?_method=DELETE"
+                          method="POST"
+                          class="d-inline"
+                          data-confirm="Delete <%= u.name %>? This cannot be undone.">
+                      <button class="btn btn-sm btn-outline-danger table-action-btn">
+                        <i class="bi bi-trash"></i>
+                      </button>
                     </form>
                   <% } %>
                 </div>
@@ -99,5 +137,100 @@
         </tbody>
       </table>
     </div>
+
+
+    <!-- Mobile -->
+    <div class="users-mobile-list">
+
+      <% users.forEach(u => { %>
+
+        <div class="user-mobile-card">
+
+          <div class="user-mobile-top">
+
+            <div class="user-mobile-identity">
+              <span class="avatar-sm"
+                    style="background: linear-gradient(135deg,#3e5c76,#29405a);">
+                <%= u.avatarInitials %>
+              </span>
+
+              <div class="user-mobile-name">
+                <strong><%= u.name %></strong>
+                <span><%= u.email %></span>
+              </div>
+            </div>
+
+            <div class="user-mobile-status">
+              <% if (u.isActive) { %>
+                <span class="stamp stamp-completed">Active</span>
+              <% } else { %>
+                <span class="stamp stamp-critical">Inactive</span>
+              <% } %>
+            </div>
+
+          </div>
+
+
+          <div class="user-mobile-details">
+
+            <div>
+              <small>Role</small>
+
+              <% if (u.role === 'admin') { %>
+                <span class="stamp stamp-critical">Administrator</span>
+              <% } else if (u.role === 'project_manager') { %>
+                <span class="stamp stamp-review">Project Manager</span>
+              <% } else { %>
+                <span class="stamp stamp-completed">Team Member</span>
+              <% } %>
+            </div>
+
+            <div>
+              <small>Joined</small>
+              <span>
+                <%= dayjs(u.createdAt).format('MMM D, YYYY') %>
+              </span>
+            </div>
+
+          </div>
+
+
+          <div class="user-mobile-actions">
+
+            <a href="/admin/users/<%= u._id %>/edit"
+               class="btn btn-sm btn-outline-secondary">
+              <i class="bi bi-pencil me-1"></i>
+              Edit
+            </a>
+
+            <form action="/admin/users/<%= u._id %>/toggle-active?_method=PATCH"
+                  method="POST">
+              <button class="btn btn-sm btn-outline-secondary">
+                <i class="bi <%= u.isActive ? 'bi-pause-circle' : 'bi-play-circle' %> me-1"></i>
+                <%= u.isActive ? 'Disable' : 'Enable' %>
+              </button>
+            </form>
+
+            <% if (u._id.toString() !== currentUser._id.toString()) { %>
+              <form action="/admin/users/<%= u._id %>?_method=DELETE"
+                    method="POST"
+                    data-confirm="Delete <%= u.name %>? This cannot be undone.">
+
+                <button class="btn btn-sm btn-outline-danger">
+                  <i class="bi bi-trash me-1"></i>
+                  Delete
+                </button>
+
+              </form>
+            <% } %>
+
+          </div>
+
+        </div>
+
+      <% }) %>
+
+    </div>
+
   <% } %>
 </div>
