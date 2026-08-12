@@ -1837,3 +1837,147 @@ a:focus-visible, button:focus-visible, .nav-link:focus-visible {
 .project-row:hover {
   background: rgba(62, 92, 118, 0.04);
 }
+/* =========================================================
+   MY ATTENDANCE - FORCE MOBILE CARD VIEW
+   ========================================================= */
+
+.my-attendance-mobile-list {
+  display: none !important;
+}
+
+@media (max-width: 768px) {
+
+  /* Hide attendance history table */
+  .my-attendance-table-desktop,
+  .my-attendance-table-desktop .table-responsive {
+    display: none !important;
+  }
+
+  /* Show attendance cards */
+  .my-attendance-mobile-list {
+    display: flex !important;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+  }
+
+  .my-attendance-card {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 15px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+  }
+
+  .my-attendance-card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding-bottom: 13px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .my-attendance-date {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+  }
+
+  .my-attendance-icon {
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff3ec;
+    color: var(--ember);
+  }
+
+  .my-attendance-date strong {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--heading);
+  }
+
+  .my-attendance-date small {
+    display: block;
+    margin-top: 3px;
+    font-size: 0.68rem;
+    color: var(--text-muted);
+  }
+
+  .my-attendance-card-top .stamp {
+    flex-shrink: 0;
+    font-size: 0.56rem;
+    padding: 3px 7px;
+  }
+
+  .my-attendance-details {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 13px 10px;
+    padding-top: 14px;
+  }
+
+  .my-attendance-detail {
+    min-width: 0;
+  }
+
+  .my-attendance-detail small {
+    display: block;
+    margin-bottom: 4px;
+    font-family: var(--font-mono);
+    font-size: 0.61rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+  }
+
+  .my-attendance-detail strong {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  [data-theme="dark"] .my-attendance-card {
+    background: var(--panel);
+    border-color: var(--border);
+  }
+
+  [data-theme="dark"] .my-attendance-icon {
+    background: #2b2d39;
+  }
+}
+
+/* Very small phones */
+@media (max-width: 400px) {
+
+  .my-attendance-card {
+    padding: 13px;
+  }
+
+  .my-attendance-card-top {
+    gap: 7px;
+  }
+
+  .my-attendance-date strong {
+    font-size: 0.82rem;
+  }
+
+  .my-attendance-card-top .stamp {
+    font-size: 0.52rem;
+    padding: 3px 6px;
+  }
+
+  .my-attendance-details {
+    gap: 11px 8px;
+  }
+
+}

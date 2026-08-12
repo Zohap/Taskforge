@@ -1,19 +1,15 @@
 <div class="page-header">
-
   <div>
-
-    <span class="eyebrow">Team Management</span>
+    <span class="eyebrow">My Workspace</span>
 
     <h1 class="h3 mb-0">
-      Team Attendance
+      My Attendance
     </h1>
 
     <p class="text-muted mb-0">
-      Monitor attendance and working hours of your team members.
+      View your attendance history and working hours.
     </p>
-
   </div>
-
 </div>
 
 
@@ -22,15 +18,13 @@
   <div class="d-flex justify-content-between align-items-center mb-4">
 
     <div>
-
       <h2 class="h6 mb-1">
         Attendance Records
       </h2>
 
       <p class="text-muted small mb-0">
-        Attendance history of team members
+        Your attendance history
       </p>
-
     </div>
 
     <span class="stamp stamp-completed">
@@ -54,212 +48,249 @@
 
   <% } else { %>
 
-   <!-- DESKTOP TABLE -->
-<div class="attendance-table-desktop">
-  <div class="table-responsive">
-    <table class="table align-middle mb-0">
-      <thead>
-        <tr>
-          <th>Team Member</th>
-          <th>Date</th>
-          <th>Check In</th>
-          <th>Check Out</th>
-          <th>Status</th>
-          <th>Working Hours</th>
-        </tr>
-      </thead>
 
-      <tbody>
-        <% attendance.forEach(record => { %>
+    <!-- ============================= -->
+    <!-- DESKTOP TABLE -->
+    <!-- ============================= -->
 
-          <tr>
+    <div class="my-attendance-table-desktop">
 
-            <td>
-              <% if (record.user) { %>
-                <div class="fw-semibold">
-                  <%= record.user.name %>
-                </div>
+      <div class="table-responsive">
 
-                <div class="text-muted small">
-                  <%= record.user.email %>
-                </div>
-              <% } else { %>
-                <span class="text-muted">
-                  User unavailable
-                </span>
-              <% } %>
-            </td>
+        <table class="table align-middle mb-0">
 
-            <td>
-              <%= dayjs(record.date).format('MMM D, YYYY') %>
-            </td>
-
-            <td>
-              <% if (record.checkIn) { %>
-                <%= dayjs(record.checkIn).format('hh:mm A') %>
-              <% } else { %>
-                —
-              <% } %>
-            </td>
-
-            <td>
-              <% if (record.checkOut) { %>
-                <%= dayjs(record.checkOut).format('hh:mm A') %>
-              <% } else { %>
-                —
-              <% } %>
-            </td>
-
-            <td>
-              <span class="stamp
-                <%= record.status === 'Late'
-                  ? 'stamp-warning'
-                  : record.status === 'Present'
-                  ? 'stamp-completed'
-                  : 'stamp-critical' %>">
-
-                <%= record.status %>
-
-              </span>
-            </td>
-
-            <td>
-              <% if (record.checkOut) { %>
-                <%= record.workingHours %> hrs
-              <% } else { %>
-                <span class="text-muted">
-                  In progress
-                </span>
-              <% } %>
-            </td>
-
-          </tr>
-
-        <% }) %>
-      </tbody>
-    </table>
-  </div>
-</div>
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Check In</th>
+              <th>Check Out</th>
+              <th>Status</th>
+              <th>Working Hours</th>
+            </tr>
+          </thead>
 
 
-<!-- MOBILE CARDS -->
-<div class="attendance-mobile-list">
+          <tbody>
 
-  <% attendance.forEach(record => { %>
+            <% attendance.forEach(record => { %>
 
-    <div class="attendance-mobile-card">
+              <tr>
 
-      <!-- CARD TOP -->
-      <div class="attendance-mobile-top">
-
-        <div class="attendance-mobile-user">
-
-          <span class="avatar-sm">
-            <%= record.user?.name
-              ? record.user.name
-                  .split(' ')
-                  .map(n => n[0])
-                  .join('')
-                  .substring(0, 2)
-                  .toUpperCase()
-              : 'U'
-            %>
-          </span>
-
-          <div class="attendance-mobile-name">
-
-            <strong>
-              <%= record.user?.name || 'User unavailable' %>
-            </strong>
-
-            <% if (record.user?.email) { %>
-              <span>
-                <%= record.user.email %>
-              </span>
-            <% } %>
-
-          </div>
-
-        </div>
-
-        <span class="stamp
-          <%= record.status === 'Late'
-            ? 'stamp-warning'
-            : record.status === 'Present'
-            ? 'stamp-completed'
-            : 'stamp-critical' %>">
-
-          <%= record.status %>
-
-        </span>
-
-      </div>
+                <td class="fw-semibold">
+                  <%= dayjs(record.date).format('MMM D, YYYY') %>
+                </td>
 
 
-      <!-- DETAILS -->
-      <div class="attendance-mobile-details">
+                <td>
 
-        <div>
-          <small>Date</small>
+                  <% if (record.checkIn) { %>
 
-          <strong>
-            <%= dayjs(record.date).format('MMM D, YYYY') %>
-          </strong>
-        </div>
+                    <%= dayjs(record.checkIn).format('hh:mm A') %>
 
+                  <% } else { %>
 
-        <div>
-          <small>Check In</small>
+                    —
 
-          <strong>
-            <% if (record.checkIn) { %>
-              <%= dayjs(record.checkIn).format('hh:mm A') %>
-            <% } else { %>
-              —
-            <% } %>
-          </strong>
-        </div>
+                  <% } %>
+
+                </td>
 
 
-        <div>
-          <small>Check Out</small>
+                <td>
 
-          <strong>
-            <% if (record.checkOut) { %>
-              <%= dayjs(record.checkOut).format('hh:mm A') %>
-            <% } else { %>
-              —
-            <% } %>
-          </strong>
-        </div>
+                  <% if (record.checkOut) { %>
+
+                    <%= dayjs(record.checkOut).format('hh:mm A') %>
+
+                  <% } else { %>
+
+                    —
+
+                  <% } %>
+
+                </td>
 
 
-        <div>
-          <small>Working Hours</small>
+                <td>
 
-          <% if (record.checkOut) { %>
+                  <span class="stamp
+                    <%= record.status === 'Late'
+                      ? 'stamp-warning'
+                      : record.status === 'Present'
+                      ? 'stamp-completed'
+                      : 'stamp-critical' %>">
 
-            <strong>
-              <%= record.workingHours %> hrs
-            </strong>
+                    <%= record.status %>
 
-          <% } else { %>
+                  </span>
 
-            <strong class="text-muted">
-              In progress
-            </strong>
+                </td>
 
-          <% } %>
 
-        </div>
+                <td>
+
+                  <% if (record.checkOut) { %>
+
+                    <%= record.workingHours %> hrs
+
+                  <% } else { %>
+
+                    <span class="text-muted">
+                      In progress
+                    </span>
+
+                  <% } %>
+
+                </td>
+
+              </tr>
+
+            <% }) %>
+
+          </tbody>
+
+        </table>
 
       </div>
 
     </div>
 
-  <% }) %>
 
-</div>
+
+    <!-- ============================= -->
+    <!-- MOBILE CARDS -->
+    <!-- ============================= -->
+
+    <div class="my-attendance-mobile-list">
+
+      <% attendance.forEach(record => { %>
+
+        <div class="my-attendance-card">
+
+
+          <!-- CARD HEADER -->
+
+          <div class="my-attendance-card-top">
+
+            <div class="my-attendance-date">
+
+              <div class="my-attendance-icon">
+                <i class="bi bi-calendar-check"></i>
+              </div>
+
+              <div>
+
+                <strong>
+                  <%= dayjs(record.date).format('MMM D, YYYY') %>
+                </strong>
+
+                <small>
+                  Attendance Record
+                </small>
+
+              </div>
+
+            </div>
+
+
+            <span class="stamp
+              <%= record.status === 'Late'
+                ? 'stamp-warning'
+                : record.status === 'Present'
+                ? 'stamp-completed'
+                : 'stamp-critical' %>">
+
+              <%= record.status %>
+
+            </span>
+
+          </div>
+
+
+
+          <!-- CARD DETAILS -->
+
+          <div class="my-attendance-details">
+
+
+            <div class="my-attendance-detail">
+
+              <small>
+                Check In
+              </small>
+
+              <strong>
+
+                <% if (record.checkIn) { %>
+
+                  <%= dayjs(record.checkIn).format('hh:mm A') %>
+
+                <% } else { %>
+
+                  —
+
+                <% } %>
+
+              </strong>
+
+            </div>
+
+
+            <div class="my-attendance-detail">
+
+              <small>
+                Check Out
+              </small>
+
+              <strong>
+
+                <% if (record.checkOut) { %>
+
+                  <%= dayjs(record.checkOut).format('hh:mm A') %>
+
+                <% } else { %>
+
+                  —
+
+                <% } %>
+
+              </strong>
+
+            </div>
+
+
+            <div class="my-attendance-detail">
+
+              <small>
+                Working Hours
+              </small>
+
+              <% if (record.checkOut) { %>
+
+                <strong>
+                  <%= record.workingHours %> hrs
+                </strong>
+
+              <% } else { %>
+
+                <strong class="text-muted">
+                  In progress
+                </strong>
+
+              <% } %>
+
+            </div>
+
+
+          </div>
+
+
+        </div>
+
+      <% }) %>
+
+    </div>
+
 
   <% } %>
 
