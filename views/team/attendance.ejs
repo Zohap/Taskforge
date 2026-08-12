@@ -1,5 +1,4 @@
 <div class="page-header">
-
   <div>
     <span class="eyebrow">My Workspace</span>
 
@@ -11,7 +10,6 @@
       View your attendance history.
     </p>
   </div>
-
 </div>
 
 
@@ -24,7 +22,6 @@
   <div class="d-flex justify-content-between align-items-center">
 
     <div>
-
       <h2 class="h6 mb-1">
         Today's Attendance
       </h2>
@@ -32,7 +29,6 @@
       <p class="text-muted small mb-0">
         <%= dayjs().format('MMM D, YYYY') %>
       </p>
-
     </div>
 
 
@@ -182,7 +178,9 @@
   </div>
 
 
+
   <% if (!attendance.length) { %>
+
 
     <div class="empty-state py-5">
 
@@ -198,41 +196,185 @@
   <% } else { %>
 
 
-    <div class="table-responsive">
 
-      <table class="table align-middle mb-0">
+    <!-- ============================= -->
+    <!-- DESKTOP TABLE -->
+    <!-- ============================= -->
 
-        <thead>
+    <div class="my-attendance-table-desktop">
 
-          <tr>
+      <div class="table-responsive">
 
-            <th>Date</th>
+        <table class="table align-middle mb-0">
 
-            <th>Check In</th>
-
-            <th>Check Out</th>
-
-            <th>Status</th>
-
-            <th>Working Hours</th>
-
-          </tr>
-
-        </thead>
-
-
-        <tbody>
-
-          <% attendance.forEach(record => { %>
+          <thead>
 
             <tr>
+              <th>Date</th>
+              <th>Check In</th>
+              <th>Check Out</th>
+              <th>Status</th>
+              <th>Working Hours</th>
+            </tr>
 
-              <td>
-                <%= dayjs(record.date).format('MMM D, YYYY') %>
-              </td>
+          </thead>
 
 
-              <td>
+          <tbody>
+
+            <% attendance.forEach(record => { %>
+
+              <tr>
+
+                <td class="fw-semibold">
+
+                  <%= dayjs(record.date).format('MMM D, YYYY') %>
+
+                </td>
+
+
+                <td>
+
+                  <% if (record.checkIn) { %>
+
+                    <%= dayjs(record.checkIn).format('hh:mm A') %>
+
+                  <% } else { %>
+
+                    —
+
+                  <% } %>
+
+                </td>
+
+
+                <td>
+
+                  <% if (record.checkOut) { %>
+
+                    <%= dayjs(record.checkOut).format('hh:mm A') %>
+
+                  <% } else { %>
+
+                    —
+
+                  <% } %>
+
+                </td>
+
+
+                <td>
+
+                  <span class="stamp
+                    <%= record.status === 'Late'
+                      ? 'stamp-warning'
+                      : record.status === 'Present'
+                      ? 'stamp-completed'
+                      : 'stamp-critical' %>">
+
+                    <%= record.status %>
+
+                  </span>
+
+                </td>
+
+
+                <td>
+
+                  <% if (record.checkOut) { %>
+
+                    <%= record.workingHours %> hrs
+
+                  <% } else { %>
+
+                    <span class="text-muted">
+                      In progress
+                    </span>
+
+                  <% } %>
+
+                </td>
+
+              </tr>
+
+            <% }) %>
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </div>
+
+
+
+    <!-- ============================= -->
+    <!-- MOBILE CARDS -->
+    <!-- ============================= -->
+
+    <div class="my-attendance-mobile-list">
+
+
+      <% attendance.forEach(record => { %>
+
+
+        <div class="my-attendance-card">
+
+
+          <!-- CARD HEADER -->
+
+          <div class="my-attendance-card-top">
+
+            <div class="my-attendance-date">
+
+              <div class="my-attendance-icon">
+                <i class="bi bi-calendar-check"></i>
+              </div>
+
+
+              <div>
+
+                <strong>
+                  <%= dayjs(record.date).format('MMM D, YYYY') %>
+                </strong>
+
+                <small>
+                  Attendance Record
+                </small>
+
+              </div>
+
+            </div>
+
+
+            <span class="stamp
+              <%= record.status === 'Late'
+                ? 'stamp-warning'
+                : record.status === 'Present'
+                ? 'stamp-completed'
+                : 'stamp-critical' %>">
+
+              <%= record.status %>
+
+            </span>
+
+          </div>
+
+
+
+          <!-- CARD DETAILS -->
+
+          <div class="my-attendance-details">
+
+
+            <div class="my-attendance-detail">
+
+              <small>
+                Check In
+              </small>
+
+              <strong>
 
                 <% if (record.checkIn) { %>
 
@@ -244,10 +386,19 @@
 
                 <% } %>
 
-              </td>
+              </strong>
+
+            </div>
 
 
-              <td>
+
+            <div class="my-attendance-detail">
+
+              <small>
+                Check Out
+              </small>
+
+              <strong>
 
                 <% if (record.checkOut) { %>
 
@@ -259,48 +410,46 @@
 
                 <% } %>
 
-              </td>
+              </strong>
+
+            </div>
 
 
-              <td>
 
-                <span class="stamp
-                  <%= record.status === 'Late'
-                    ? 'stamp-warning'
-                    : record.status === 'Present'
-                    ? 'stamp-completed'
-                    : '' %>">
+            <div class="my-attendance-detail">
 
-                  <%= record.status %>
+              <small>
+                Working Hours
+              </small>
 
-                </span>
+              <% if (record.checkOut) { %>
 
-              </td>
-
-
-              <td>
-
-                <% if (record.checkOut) { %>
-
+                <strong>
                   <%= record.workingHours %> hrs
+                </strong>
 
-                <% } else { %>
+              <% } else { %>
 
-                  —
+                <strong class="text-muted">
+                  In progress
+                </strong>
 
-                <% } %>
+              <% } %>
 
-              </td>
+            </div>
 
-            </tr>
 
-          <% }) %>
+          </div>
 
-        </tbody>
 
-      </table>
+        </div>
+
+
+      <% }) %>
+
 
     </div>
+
 
 
   <% } %>

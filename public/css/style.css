@@ -1979,5 +1979,7 @@ a:focus-visible, button:focus-visible, .nav-link:focus-visible {
   .my-attendance-details {
     gap: 11px 8px;
   }
-
+table th{
+  font-size: smaller !important;
+}
 }
