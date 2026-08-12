@@ -94,64 +94,158 @@
       <a href="/admin/projects/new" class="btn btn-ember btn-sm">Create Project</a>
     </div>
   <% } else { %>
-    <div class="table-responsive">
-     <table class="table data-table mb-0">
-  <thead>
-    <tr>
-      <th>Project</th>
-      <th>Manager</th>
-      <th>Priority</th>
-      <th>Status</th>
-      <th>Deadline</th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% recentProjects.forEach(p => { %>
-      <tr class="project-row" onclick="window.location='/projects/<%= p._id %>'">
-
-        <td>
-          <div class="d-flex align-items-center gap-3">
-
-            <div class="project-avatar">
-              <i class="bi bi-kanban"></i>
-            </div>
-
-            <div>
-              <div class="fw-semibold"><%= p.name %></div>
-
-              <small class="text-muted">
-                Created Project
-              </small>
-            </div>
-
-          </div>
-        </td>
-
-        <td><%= p.projectManager ? p.projectManager.name : '—' %></td>
-
-        <td>
-          <span class="stamp <%= priorityClass(p.priority) %>">
-            <%= p.priority %>
-          </span>
-        </td>
-
-        <td>
-          <span class="stamp <%= projectStatusClass(p.status) %>">
-            <%= p.status %>
-          </span>
-        </td>
-
-        <td class="text-muted">
-          <i class="bi bi-calendar3 me-1"></i>
-          <%= dayjs(p.endDate).format('MMM D, YYYY') %>
-        </td>
-
+   <!-- Desktop / Tablet -->
+<div class="table-responsive recent-projects-desktop">
+  <table class="table data-table mb-0">
+    <thead>
+      <tr>
+        <th>Project</th>
+        <th>Manager</th>
+        <th>Priority</th>
+        <th>Status</th>
+        <th>Deadline</th>
       </tr>
-    <% }) %>
-  </tbody>
-</table>
+    </thead>
+
+    <tbody>
+      <% recentProjects.forEach(p => { %>
+        <tr
+          class="project-row"
+          onclick="window.location='/projects/<%= p._id %>'"
+        >
+
+          <td>
+            <div class="d-flex align-items-center gap-3">
+
+              <div class="project-avatar">
+                <i class="bi bi-kanban"></i>
+              </div>
+
+              <div>
+                <div class="fw-semibold">
+                  <%= p.name %>
+                </div>
+
+                <small class="text-muted">
+                  Created Project
+                </small>
+              </div>
+
+            </div>
+          </td>
+
+          <td>
+            <%= p.projectManager ? p.projectManager.name : '—' %>
+          </td>
+
+          <td>
+            <span class="stamp <%= priorityClass(p.priority) %>">
+              <%= p.priority %>
+            </span>
+          </td>
+
+          <td>
+            <span class="stamp <%= projectStatusClass(p.status) %>">
+              <%= p.status %>
+            </span>
+          </td>
+
+          <td class="text-muted">
+            <i class="bi bi-calendar3 me-1"></i>
+            <%= dayjs(p.endDate).format('MMM D, YYYY') %>
+          </td>
+
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>
+
+
+<!-- Mobile -->
+<div class="recent-projects-mobile">
+
+  <% recentProjects.forEach(p => { %>
+
+    <div
+      class="recent-project-card"
+      onclick="window.location='/projects/<%= p._id %>'"
+    >
+
+      <div class="recent-project-top">
+
+        <div class="recent-project-identity">
+
+          <div class="project-avatar">
+            <i class="bi bi-kanban"></i>
+          </div>
+
+          <div>
+            <strong>
+              <%= p.name %>
+            </strong>
+
+            <small>
+              Created Project
+            </small>
+          </div>
+
+        </div>
+
+        <i class="bi bi-chevron-right recent-project-arrow"></i>
+
+      </div>
+
+
+      <div class="recent-project-details">
+
+        <div>
+          <small>Manager</small>
+
+          <span>
+            <%= p.projectManager ? p.projectManager.name : '—' %>
+          </span>
+        </div>
+
+
+        <div>
+          <small>Priority</small>
+
+          <span>
+            <span class="stamp <%= priorityClass(p.priority) %>">
+              <%= p.priority %>
+            </span>
+          </span>
+        </div>
+
+
+        <div>
+          <small>Status</small>
+
+          <span>
+            <span class="stamp <%= projectStatusClass(p.status) %>">
+              <%= p.status %>
+            </span>
+          </span>
+        </div>
+
+
+        <div>
+          <small>Deadline</small>
+
+          <span>
+            <i class="bi bi-calendar3 me-1"></i>
+            <%= dayjs(p.endDate).format('MMM D, YYYY') %>
+          </span>
+        </div>
+
+      </div>
+
     </div>
+
+  <% }) %>
+
+</div>
   <% } %>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
